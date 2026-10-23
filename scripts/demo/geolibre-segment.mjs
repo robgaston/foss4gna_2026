@@ -24,21 +24,20 @@ const PLANT_OUTLINE = [
 
 async function signInToPlugin(studio, director) {
     const { page, panel, pause, glideAndClick, typeInto } = studio;
-    await director.caption("Open the Arches plugin");
+    await director.caption("Open the Arches plugin and sign in as a contributor, not a reviewer");
     await glideAndClick(page.getByRole("button", { name: "Plugins", exact: true }));
     await page.getByRole("menuitem", { name: /^Installed/ }).hover();
     await glideAndClick(page.getByRole("menuitem", { name: /^Arches/ }));
     await page.keyboard.press("Escape");
     await pause(800);
 
-    await director.caption("Sign in to Arches as a contributor (not a reviewer)");
-    await typeInto(panel.getByLabel("Arches URL"), ARCHES_URL);
+    await typeInto(panel.getByLabel("Arches URL"), ARCHES_URL, 15);
     await glideAndClick(panel.getByRole("button", { name: "Use a password instead" }));
-    await typeInto(panel.getByLabel("Username"), CONTRIBUTOR_USERNAME);
-    await typeInto(panel.getByPlaceholder("Password"), DEMO_PASSWORD, 25);
+    await typeInto(panel.getByLabel("Username"), CONTRIBUTOR_USERNAME, 20);
+    await typeInto(panel.getByPlaceholder("Password"), DEMO_PASSWORD, 10);
     await glideAndClick(panel.getByRole("button", { name: "Sign in", exact: true }));
     await panel.getByText("Signed in to").waitFor({ timeout: 30_000 });
-    await pause(2000);
+    await pause(1200);
 }
 
 async function searchPlace(studio, text) {
@@ -68,7 +67,7 @@ export async function showArchesInGeoLibre(studio, director) {
     const { panel, pause, glideAndClick } = studio;
     await director.goto(harness.GEOLIBRE_URL);
     await director.caption("GeoLibre: an open-source GIS that runs entirely in the browser");
-    await pause(2500);
+    await pause(1500);
     await signInToPlugin(studio, director);
 
     await director.caption("Add the Arches Monument layer, styled as it is in Arches");

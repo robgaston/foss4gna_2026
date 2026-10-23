@@ -11,8 +11,9 @@ const archesGeolibreDirectory =
     process.env.ARCHES_GEOLIBRE_DIR ??
     path.join(homedir(), "Projects/arches-geolibre");
 
-// The harness reads the Arches URL when it loads.
+// The harness reads these when it loads. 1600x900 matches the 16:9 slides.
 process.env.ARCHES_TEST_URL = ARCHES_URL;
+process.env.DEMO_VIEWPORT ??= "1600x900";
 export const harness = await import(
     path.join(archesGeolibreDirectory, "scripts/demo/harness.mjs")
 );

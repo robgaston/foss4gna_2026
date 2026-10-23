@@ -13,7 +13,8 @@
 // Needs the demo instance (notes/foss4gna/demo_project.md) and GeoLibre's web
 // build with the plugin (arches-geolibre docs/testing.md).
 
-import { copyFile, mkdir, rm } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { copyFile, mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import {
@@ -37,6 +38,7 @@ import {
 import { mapTheUnmappedPlant, showArchesInGeoLibre } from "./demo/geolibre-segment.mjs";
 
 const VIDEO_NAME = "foss4gna-demo";
+const GEOLIBRE_CLIP_NAME = "foss4gna-demo-geolibre.mp4";
 
 function titleCardHtml(heading, subheading) {
     return `<!doctype html><html><body style="margin:0;height:100vh;display:flex;flex-direction:column;
@@ -51,8 +53,25 @@ function titleCardHtml(heading, subheading) {
 /** Captions that survive page loads, and stills taken without them. */
 function createDirector(page) {
     let currentCaption = "";
-    const showCaption = (text) => page.evaluate((value) => window.showCaption(value), text);
+    // The harness's captions are sized for a monitor; enlarge them so they
+    // stay readable when the video plays inside a slide.
+    const showCaption = (text) =>
+        page.evaluate((value) => {
+            const caption = [...document.body.children].find(
+                (element) => element.style.zIndex === "2147483646",
+            );
+            if (caption) {
+                caption.style.font = "600 30px/1.35 system-ui, sans-serif";
+                caption.style.bottom = "64px";
+                caption.style.maxWidth = "80%";
+                caption.style.padding = "14px 26px";
+            }
+            window.showCaption(value);
+        }, text);
     return {
+        async reshow() {
+            await showCaption(currentCaption);
+        },
         async caption(text) {
             currentCaption = text;
             await showCaption(text);
@@ -82,8 +101,12 @@ await mkdir(SCREENSHOT_DIRECTORY, { recursive: true });
 await mkdir(VIDEO_DIRECTORY, { recursive: true });
 const previewServer = await harness.ensurePreviewServer();
 let writes = [];
+// Seconds into the recording where each part starts, for cutting clips.
+const markers = {};
 try {
     const recordedPath = await harness.recordVideo(VIDEO_NAME, async (studio) => {
+        const recordingStarted = Date.now();
+        const mark = (name) => (markers[name] = (Date.now() - recordingStarted) / 1000);
         const director = createDirector(studio.page);
         writes = recordGeometryWrites(studio.page);
         await director.titleCard(
@@ -94,9 +117,17 @@ try {
         await screenCorridor(studio, director);
         await openRanchoVega(studio, director);
         await followRelationships(studio, director);
+        await director.caption("");
+        mark("geolibreStart");
+        await director.titleCard(
+            "Part 2 · Bring it into your GIS",
+            "GeoLibre with the Arches plugin (experimental): load the data, then map a record that has no geometry yet.",
+            3500,
+        );
         await showArchesInGeoLibre(studio, director);
         await mapTheUnmappedPlant(studio, director);
         await reviewInArches(studio, director);
+        mark("outroStart");
         await director.caption("");
         await director.titleCard(
             "The relationships are the data",
@@ -108,6 +139,20 @@ try {
     await copyFile(recordedPath, target);
     await rm(recordedPath);
     console.log(`Saved ${target}`);
+
+    // The hybrid demo plays only the GeoLibre part, so cut it out as its own clip.
+    const clipPath = path.join(VIDEO_DIRECTORY, GEOLIBRE_CLIP_NAME);
+    execFileSync("ffmpeg", [
+        ...["-v", "error", "-y", "-ss", String(Math.max(0, markers.geolibreStart - 0.2))],
+        ...["-to", String(markers.outroStart + 0.5), "-i", target],
+        ...["-c:v", "libx264", "-preset", "slow", "-crf", "22", "-pix_fmt", "yuv420p"],
+        ...["-movflags", "+faststart", clipPath],
+    ]);
+    await writeFile(
+        path.join(VIDEO_DIRECTORY, "foss4gna-demo-markers.json"),
+        JSON.stringify(markers, null, 2),
+    );
+    console.log(`Saved ${clipPath} (${markers.geolibreStart.toFixed(1)}s to ${markers.outroStart.toFixed(1)}s)`);
 } finally {
     await undoGeometryWrites(writes);
     console.log(`${PLANT_NAME} now has ${await plantGeometryFeatureCount()} geometry feature(s).`);
