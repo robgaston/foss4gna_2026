@@ -1,0 +1,599 @@
+/* FOSS4G NA 2026 deck theme: Arches branding (red arch, charcoal, warm neutrals). */
+
+@font-face {
+    font-family: "Montserrat";
+    src: url("../lib/fonts/montserrat/montserrat-regular.woff") format("woff");
+    font-weight: 400;
+}
+@font-face {
+    font-family: "Montserrat";
+    src: url("../lib/fonts/montserrat/montserrat-bold.woff") format("woff");
+    font-weight: 700;
+}
+@font-face {
+    font-family: "Open Sans";
+    src: url("../lib/fonts/opensans/opensans-regular.woff") format("woff");
+    font-weight: 400;
+}
+@font-face {
+    font-family: "Open Sans";
+    src: url("../lib/fonts/opensans/opensans-bold.woff") format("woff");
+    font-weight: 700;
+}
+@font-face {
+    font-family: "Open Sans";
+    src: url("../lib/fonts/opensans/opensans-italic.woff") format("woff");
+    font-style: italic;
+}
+
+:root {
+    --arches-red: #c4151a;
+    --arches-red-dark: #a71c20;
+    --arches-red-tint: #f8e3e3;
+    --ink: #1f2326;
+    --ink-soft: #4a4f55;
+    --ink-muted: #7a7f85;
+    --paper: #ffffff;
+    --mist: #f4f3f1;
+    --line: #dcd8d3;
+    --slate: #3e4c5a;
+    --sand: #b98b4e;
+    --night: #17191b;
+
+    --heading-font: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+    --body-font: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+    --code-font: "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+.reveal-viewport {
+    background: var(--paper);
+}
+
+/* reveal.js lays slides out on a fixed 1280x720 canvas and scales the whole
+   canvas to the screen, so the root size must be absolute; everything else is
+   relative to it. */
+.reveal {
+    font-family: var(--body-font);
+    font-size: 34px;
+    color: var(--ink);
+}
+
+.reveal .slides {
+    text-align: left;
+}
+
+.reveal .slides section {
+    height: 100%;
+    padding: 1.6em 2em 1.2em;
+    box-sizing: border-box;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+    font-family: var(--heading-font);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    margin: 0 0 0.5em;
+    text-transform: none;
+}
+
+.reveal h1 { font-size: 2.4em; }
+.reveal h2 { font-size: 1.6em; }
+.reveal h3 { font-size: 1.05em; }
+.reveal h4 { font-size: 0.85em; }
+
+.reveal p,
+.reveal li {
+    line-height: 1.45;
+}
+
+.reveal ul {
+    margin: 0 0 0 1.1em;
+}
+
+.reveal li {
+    margin-bottom: 0.4em;
+}
+
+.reveal li::marker {
+    color: var(--arches-red);
+}
+
+.reveal strong {
+    color: var(--ink);
+}
+
+.reveal a {
+    color: var(--arches-red);
+    text-decoration: none;
+    border-bottom: 0.06em solid currentColor;
+}
+
+.reveal .eyebrow {
+    font-family: var(--heading-font);
+    font-size: 0.5em;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--arches-red);
+    margin: 0 0 0.6em;
+}
+
+.reveal .lede {
+    font-size: 0.95em;
+    color: var(--ink-soft);
+    max-width: 34em;
+}
+
+.reveal .caption {
+    font-size: 0.55em;
+    font-style: italic;
+    color: var(--ink-muted);
+    margin-top: 0.8em;
+}
+
+.reveal .closing-line {
+    font-size: 0.75em;
+    font-style: italic;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-top: 1.2em;
+}
+
+.reveal .small {
+    font-size: 0.7em;
+}
+
+.reveal .muted {
+    color: var(--ink-muted);
+}
+
+.reveal .accent {
+    color: var(--arches-red);
+}
+
+/* ---------- Layout ---------- */
+
+.reveal .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4em;
+    align-items: start;
+}
+
+.reveal .columns.wide-left { grid-template-columns: 3fr 2fr; }
+.reveal .columns.wide-right { grid-template-columns: 2fr 3fr; }
+.reveal .columns.three { grid-template-columns: repeat(3, 1fr); }
+.reveal .columns.four { grid-template-columns: repeat(4, 1fr); }
+.reveal .columns.centered { align-items: center; }
+
+.reveal .stack > * + * {
+    margin-top: 0.7em;
+}
+
+/* ---------- Cards ---------- */
+
+.reveal .card {
+    background: var(--mist);
+    border-radius: 0.35em;
+    padding: 0.8em 1em;
+    font-size: 0.8em;
+    border-top: 0.2em solid var(--arches-red);
+}
+
+.reveal .card h3 {
+    font-size: 1.15em;
+    margin-bottom: 0.35em;
+}
+
+.reveal .card p {
+    margin: 0;
+    color: var(--ink-soft);
+}
+
+.reveal .card.dark {
+    background: var(--ink);
+    color: var(--paper);
+    border-top-color: var(--arches-red);
+}
+
+.reveal .card.dark h3,
+.reveal .card.dark p {
+    color: var(--paper);
+}
+
+.reveal .card.quiet {
+    border-top-color: var(--line);
+}
+
+.reveal .card.compact {
+    font-size: 0.66em;
+    padding: 0.65em 0.9em;
+}
+
+.reveal .question {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: 0.75em;
+    padding: 0.9em 1em;
+    border-left: 0.3em solid var(--arches-red);
+    border-radius: 0.2em;
+}
+
+.reveal .stat {
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: 1.6em;
+    color: var(--arches-red);
+    line-height: 1;
+}
+
+/* ---------- Flat attribute tables ---------- */
+
+.reveal table.flat-table {
+    border-collapse: collapse;
+    font-family: var(--code-font);
+    font-size: 0.6em;
+    width: 100%;
+}
+
+.reveal table.flat-table th {
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 700;
+    text-align: left;
+    padding: 0.6em 0.8em;
+    border: none;
+}
+
+.reveal table.flat-table td {
+    padding: 0.55em 0.8em;
+    border-bottom: 0.06em solid var(--line);
+    color: var(--ink-soft);
+}
+
+.reveal table.flat-table tr:nth-child(even) td {
+    background: var(--mist);
+}
+
+.reveal .record {
+    font-family: var(--code-font);
+    font-size: 0.55em;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 0.3em;
+    padding: 0.9em 1.1em;
+    box-shadow: 0 0.3em 1.2em rgba(0, 0, 0, 0.25);
+    line-height: 1.6;
+}
+
+.reveal .record .key {
+    color: var(--ink-muted);
+}
+
+.reveal pre.code {
+    font-family: var(--code-font);
+    font-size: 0.5em;
+    line-height: 1.45;
+    background: var(--night);
+    color: #e9e6e1;
+    border-radius: 0.4em;
+    padding: 1em 1.2em;
+    margin: 0;
+    white-space: pre;
+    box-shadow: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.reveal pre.code .term { color: #f2a7a9; }
+.reveal pre.code .literal { color: #e8c48f; }
+.reveal pre.code .dim { color: #8a8f95; }
+
+/* ---------- Media ---------- */
+
+.reveal .screenshot {
+    width: 100%;
+    border-radius: 0.3em;
+    box-shadow: 0 0.25em 1em rgba(0, 0, 0, 0.18);
+    border: 0.04em solid var(--line);
+}
+
+.reveal .screenshot-full {
+    display: block;
+    max-height: 16.6em;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 0.3em;
+    box-shadow: 0 0.25em 1em rgba(0, 0, 0, 0.18);
+}
+
+.reveal img.photo {
+    display: block;
+    width: 100%;
+    height: 10.5em;
+    object-fit: cover;
+    /* Keeps the building in frame and crops most of the empty road. */
+    object-position: center 25%;
+    margin: 0;
+    border-radius: 0.35em;
+    box-shadow: 0 0.25em 1em rgba(0, 0, 0, 0.18);
+}
+
+.reveal .placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 0.4em;
+    background: repeating-linear-gradient(
+        135deg,
+        var(--mist),
+        var(--mist) 0.6em,
+        #ebe8e4 0.6em,
+        #ebe8e4 1.2em
+    );
+    border: 0.1em dashed var(--ink-muted);
+    border-radius: 0.35em;
+    color: var(--ink-soft);
+    font-size: 0.6em;
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+.reveal .placeholder strong {
+    font-family: var(--heading-font);
+    color: var(--arches-red);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+
+.reveal svg.diagram {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.reveal svg.diagram text {
+    font-family: var(--body-font);
+}
+
+.reveal svg.diagram .node-label {
+    font-family: var(--heading-font);
+    font-weight: 700;
+}
+
+/* ---------- Dark slides (title, section, demo, closing) ---------- */
+
+.reveal section.dark,
+.reveal section.dark h1,
+.reveal section.dark h2,
+.reveal section.dark h3,
+.reveal section.dark p,
+.reveal section.dark li,
+.reveal section.dark strong {
+    color: var(--paper);
+}
+
+.reveal section.dark .lede,
+.reveal section.dark .muted {
+    color: #c9c6c1;
+}
+
+.reveal .title-slide {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.reveal .title-slide h1 {
+    font-size: 2.3em;
+    max-width: 11em;
+}
+
+.reveal .title-slide .subtitle {
+    font-size: 1.05em;
+    color: #d6d3ce;
+    margin: 0 0 1.6em;
+}
+
+.reveal .title-slide .byline {
+    font-size: 0.7em;
+    border-top: 0.06em solid rgba(255, 255, 255, 0.25);
+    padding-top: 0.8em;
+    max-width: 18em;
+}
+
+.reveal .logo-row {
+    position: absolute;
+    right: 2em;
+    bottom: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 1.2em;
+}
+
+.reveal .logo-row img {
+    margin: 0;
+    height: 1.4em;
+    width: auto;
+}
+
+.reveal .slide-mark {
+    position: absolute;
+    right: 1.4em;
+    top: 1.2em;
+    width: 1.3em;
+    height: auto;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.reveal .network-motif {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 46%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.reveal .demo-steps {
+    counter-reset: demo-step;
+    list-style: none;
+    margin: 0;
+    font-size: 0.85em;
+}
+
+.reveal .demo-steps li {
+    counter-increment: demo-step;
+    padding-left: 2em;
+    position: relative;
+    margin-bottom: 0.7em;
+}
+
+.reveal .demo-steps li::before {
+    content: counter(demo-step);
+    position: absolute;
+    left: 0;
+    top: 0.05em;
+    width: 1.4em;
+    height: 1.4em;
+    border-radius: 50%;
+    background: var(--arches-red);
+    color: var(--paper);
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reveal .backup-label {
+    font-family: var(--heading-font);
+    font-size: 0.45em;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+}
+
+/* ---------- Demo recap ---------- */
+
+.reveal .recap {
+    display: grid;
+    grid-template-columns: 2.3fr 1fr;
+    gap: 1.1em;
+    align-items: center;
+    height: 100%;
+}
+
+.reveal .recap .screenshot {
+    margin: 0;
+    max-height: 18.5em;
+    object-fit: contain;
+}
+
+.reveal .recap .screenshot.crop-left {
+    /* Report pages leave the right half empty; crop to the content. */
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: left top;
+}
+
+.reveal .recap-caption {
+    font-size: 0.78em;
+}
+
+.reveal .recap-caption h3 {
+    font-size: 1.35em;
+    margin-bottom: 0.5em;
+}
+
+.reveal .recap-caption p {
+    color: var(--ink-soft);
+    margin: 0 0 0.8em;
+}
+
+.reveal .recap-caption .so-what {
+    color: var(--ink);
+    font-weight: 700;
+    border-left: 0.2em solid var(--arches-red);
+    padding-left: 0.6em;
+}
+
+/* ---------- Spectrum ---------- */
+
+.reveal .spectrum {
+    position: relative;
+    height: 0.9em;
+    border-radius: 0.45em;
+    background: linear-gradient(90deg, var(--line), var(--arches-red));
+    margin: 1.6em 0 0.6em;
+}
+
+.reveal .spectrum-marker {
+    position: absolute;
+    left: 74%;
+    top: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 0.15em solid var(--paper);
+    transform: translate(-50%, -50%);
+}
+
+.reveal .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6em;
+    color: var(--ink-soft);
+}
+
+.reveal .spectrum-labels div:last-child {
+    text-align: right;
+}
+
+/* ---------- QR ---------- */
+
+.reveal .qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4em;
+    font-size: 0.55em;
+    text-align: center;
+}
+
+.reveal .qr img {
+    width: 10em;
+    height: 10em;
+    margin: 0;
+    image-rendering: pixelated;
+}
+
+/* ---------- reveal.js chrome ---------- */
+
+.reveal .controls {
+    color: var(--arches-red);
+}
+
+.reveal .progress {
+    color: var(--arches-red);
+}
+
+.reveal .slide-number {
+    background: transparent;
+    color: var(--ink-muted);
+    font-family: var(--heading-font);
+    font-size: 0.5em;
+}
