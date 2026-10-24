@@ -106,7 +106,7 @@
                             <text x="250" y="91" text-anchor="middle" fill="#fff" font-size="17" class="node-label">Paul R.</text>
                             <text x="250" y="112" text-anchor="middle" fill="#fff" font-size="17" class="node-label">Williams</text>
                             <text x="250" y="190" text-anchor="middle" fill="#4a4f55" font-size="19">first Black member of the AIA (1923)</text>
-                            <text x="250" y="214" text-anchor="middle" fill="#4a4f55" font-size="19">and designer of 7 LA landmarks</text>
+                            <text x="250" y="214" text-anchor="middle" fill="#4a4f55" font-size="19">and architect of many LA landmarks</text>
                         </g>
                         <g class="fragment" data-fragment-index="2">
                             <text x="770" y="150" text-anchor="middle" fill="#7a7f85" font-size="18" font-style="italic">housed workers of</text>
@@ -135,108 +135,82 @@
                             <li>Click 4: <em>"None of that is an attribute of the geometry. All of it is a relationship. That's the claim of this talk: the relationships are the data."</em></li>
                             <li><em>"If a project screening only looked at the parcel layer, this place wouldn't be flagged."</em></li>
                             <li>Sources: HistoricPlacesLA lists Williams as architect; SurveyLA identified the complex.</li>
+                            <li>Don't put a number on his landmarks here: the demo data has 7 of them (the Wikidata works that match HCM polygons), but there are more, for example Villa Manola (HCM 1084).</li>
                         </ul>
                     </aside>
                 </section>
 
                 <!-- ============================================================
-                     2. THE GAP AND THE MODEL (2:00 to 5:15)
+                     2. THE MODEL (2:00 to 4:15)
                      ============================================================ -->
 
-                <!-- Slide 4: The gap -->
-                <section>
-                    <p class="eyebrow">01 · The gap</p>
-                    <h2>You've seen this table before</h2>
-                    <div class="columns wide-left">
-                        <div>
-                            <table class="flat-table">
-                                <thead>
-                                    <tr><th>ID</th><th>TYPE</th><th>BUILT_BY</th><th>NOTES</th><th>DATE_DESC</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>014</td><td>culvert</td><td>City Engineering</td><td>rehab noted '19</td><td>ca. 1970s</td></tr>
-                                    <tr><td>015</td><td>bridge</td><td>unknown</td><td>-</td><td>1932?</td></tr>
-                                    <tr><td>016</td><td>pump_stn</td><td>Contractor X</td><td>see attached</td><td>2004</td></tr>
-                                </tbody>
-                            </table>
-                            <p class="caption">A typical asset table: familiar, fast, and complete by its own definition.</p>
-                        </div>
-                        <div class="stack">
-                            <div class="question fragment">Who verified "built_by"?</div>
-                            <div class="question fragment">What report backs up "notes"?</div>
-                            <div class="question fragment">What vocabulary defines "type"?</div>
-                        </div>
-                    </div>
-                    <p class="closing-line fragment">Provenance, events, evidence, shared meaning, uncertain dates: <strong>none of it fits in a column until it's modeled as a relationship.</strong></p>
-                    <aside class="notes">
-                        <p>⏱ 2:00 to 3:00</p>
-                        <ul>
-                            <li>Infrastructure on purpose, so nobody files this under "a heritage problem."</li>
-                            <li>Three clicks, three questions: provenance (who says so?), documentation (what backs it up?), vocabulary (what does "type" mean?).</li>
-                            <li>Last click: the events behind a record (construction, survey, demolition) and uncertain dates like "ca. 1970s" don't fit either.</li>
-                            <li><em>"Every one of these columns is a relationship that's been flattened into a string."</em></li>
-                        </ul>
-                    </aside>
-                </section>
-
-                <!-- Slide 5: What Arches is -->
+                <!-- Slide 4: What Arches is -->
                 <section>
                     <img class="slide-mark" src="assets/brand/arches-mark.png" alt="" />
-                    <p class="eyebrow">02 · The model</p>
+                    <p class="eyebrow">01 · The model</p>
                     <h2>Arches: open source, standards-based</h2>
                     <div class="columns wide-left">
                         <div>
-                            <p class="lede" style="font-size: 0.85em">An open-source data management platform, developed with the Getty Conservation Institute and World Monuments Fund to answer a hard question: <strong>how do you describe cultural heritage?</strong></p>
+                            <p class="lede" style="font-size: 0.85em">Open-source data management, developed with the Getty Conservation Institute and World Monuments Fund for a hard problem: <strong>describing cultural heritage.</strong></p>
                             <ul class="small">
-                                <li>Uncertain dates, fuzzy extents, deep description</li>
-                                <li>Dense relationships between places, people, events and evidence</li>
-                                <li>Records that must outlive the software that holds them</li>
+                                <li>Uncertain dates, fuzzy extents, dense relationships</li>
+                                <li>Records that must outlive the software</li>
+                                <li>Los Angeles' own inventory, HistoricPlacesLA, runs on it</li>
                             </ul>
                         </div>
                         <div class="stack">
-                            <div class="card compact"><h3>AGPL-3.0, on your stack</h3><p>PostgreSQL/PostGIS, Django, Elasticsearch, MapLibre, Vue</p></div>
-                            <div class="card compact"><h3>CIDOC CRM</h3><p>The ontology behind every graph, adopted as ISO 21127:2023</p></div>
-                            <div class="card compact"><h3>Vocabularies and linked data</h3><p>SKOS thesauri for shared terms; every resource exports as JSON-LD</p></div>
+                            <div class="card compact"><h3>AGPL-3.0, on your stack</h3><p>PostgreSQL/PostGIS, Django, Elasticsearch</p></div>
+                            <div class="card compact"><h3>CIDOC CRM</h3><p>The ontology behind every graph (ISO 21127)</p></div>
+                            <div class="card compact"><h3>Vocabularies, linked data</h3><p>SKOS thesauri; JSON-LD export</p></div>
                         </div>
                     </div>
-                    <p class="caption">The demo uses the community's open arches-her models, built for Historic Environment Records, plus a few US terms.</p>
+                    <p class="caption">The demo uses the community's open arches-her models, plus a few US terms.</p>
                     <aside class="notes">
-                        <p>⏱ 3:00 to 3:45</p>
+                        <p>⏱ 2:00 to 2:45</p>
                         <ul>
                             <li>Built for heritage because heritage is hard: uncertain, relationship-dense, long-lived.</li>
-                            <li>Point at "on your stack": it runs on what this room already runs.</li>
+                            <li>HistoricPlacesLA, the City's historic resources inventory and the source of the Rancho Vega photo, is an Arches deployment. Say so: the story isn't hypothetical.</li>
+                            <li>Point at "on your stack": it runs on what this room already runs. If asked about the map library: MapLibre from Arches 8.2 (upcoming); 8.1 still ships mapbox-gl 1.13, the last BSD-licensed release.</li>
                             <li>Standards in one breath: CIDOC CRM for meaning, SKOS for terms, JSON-LD out. Not a lesson in CIDOC CRM.</li>
+                            <li>arches-her: models built for Historic Environment Records in England.</li>
                         </ul>
                     </aside>
                 </section>
 
-                <!-- Slide 6: Two levels of graph (with a vertical slide for the graph designer) -->
+                <!-- Slide 5: Two levels of graph (with a vertical slide for the graph designer) -->
                 <section>
                     <section>
-                        <p class="eyebrow">02 · The model</p>
+                        <p class="eyebrow">01 · The model</p>
                         <h2>Graphs inside and between resources</h2>
                         <div class="columns">
                             <div>
                                 <h3>Inside a resource model</h3>
-                                <svg class="diagram" viewBox="0 0 540 310" role="img" aria-label="A resource model as a graph of CIDOC CRM classes">
+                                <svg class="diagram" viewBox="0 0 540 310" role="img" aria-label="A resource model as a graph of CIDOC CRM classes: Rancho Vega was present at an activity carried out by Paul R. Williams as architect, was altered by a construction that falls within World War II, and has a geometry">
                                     <g stroke="#7a7f85" stroke-width="2.5" fill="none">
-                                        <path d="M100 76 L100 155 L190 155" /><path d="M100 155 L100 255 L190 255" /><path d="M330 155 L355 155 L355 110 L372 110" /><path d="M355 155 L355 200 L372 200" />
+                                        <path d="M100 66 L100 274 L190 274" /><path d="M100 118 L190 118" /><path d="M100 204 L190 204" />
+                                        <path d="M340 118 L355 118 L355 96 L372 96" /><path d="M355 118 L355 140 L372 140" /><path d="M340 204 L372 204" />
                                     </g>
-                                    <rect x="10" y="20" width="200" height="60" rx="8" fill="#c4151a" />
-                                    <text x="110" y="47" text-anchor="middle" fill="#fff" font-size="19" class="node-label">Rancho Vega</text>
-                                    <text x="110" y="69" text-anchor="middle" fill="#fff" font-size="15">E18 Physical Thing</text>
-                                    <rect x="190" y="127" width="140" height="56" rx="8" fill="#3e4c5a" />
-                                    <text x="260" y="152" text-anchor="middle" fill="#fff" font-size="17" class="node-label">Production</text>
-                                    <text x="260" y="173" text-anchor="middle" fill="#fff" font-size="14">E12</text>
-                                    <rect x="372" y="84" width="165" height="52" rx="8" fill="#1f2326" />
-                                    <text x="454" y="106" text-anchor="middle" fill="#fff" font-size="17" class="node-label">Actor</text>
-                                    <text x="454" y="126" text-anchor="middle" fill="#fff" font-size="13">P14 carried out by</text>
-                                    <rect x="372" y="174" width="165" height="52" rx="8" fill="#4a4f55" />
-                                    <text x="454" y="196" text-anchor="middle" fill="#fff" font-size="17" class="node-label">Time-span</text>
-                                    <text x="454" y="216" text-anchor="middle" fill="#fff" font-size="13">P4 has time-span</text>
-                                    <rect x="190" y="228" width="180" height="56" rx="8" fill="#b98b4e" />
-                                    <text x="280" y="253" text-anchor="middle" fill="#fff" font-size="17" class="node-label">Geometry</text>
-                                    <text x="280" y="274" text-anchor="middle" fill="#fff" font-size="14">GeoJSON node</text>
+                                    <rect x="10" y="10" width="200" height="56" rx="8" fill="#c4151a" />
+                                    <text x="110" y="35" text-anchor="middle" fill="#fff" font-size="19" class="node-label">Rancho Vega</text>
+                                    <text x="110" y="56" text-anchor="middle" fill="#fff" font-size="15">E18 Physical Thing</text>
+                                    <rect x="190" y="92" width="150" height="52" rx="8" fill="#3e4c5a" />
+                                    <text x="265" y="114" text-anchor="middle" fill="#fff" font-size="16" class="node-label">Activity (E7)</text>
+                                    <text x="265" y="134" text-anchor="middle" fill="#fff" font-size="12">P12i was present at</text>
+                                    <rect x="372" y="72" width="165" height="46" rx="8" fill="#1f2326" />
+                                    <text x="454" y="92" text-anchor="middle" fill="#fff" font-size="15" class="node-label">Paul R. Williams</text>
+                                    <text x="454" y="110" text-anchor="middle" fill="#fff" font-size="12">P14 carried out by</text>
+                                    <rect x="372" y="122" width="165" height="40" rx="8" fill="#4a4f55" />
+                                    <text x="454" y="139" text-anchor="middle" fill="#fff" font-size="15" class="node-label">Architect</text>
+                                    <text x="454" y="155" text-anchor="middle" fill="#fff" font-size="12">P2 has type</text>
+                                    <rect x="190" y="178" width="150" height="52" rx="8" fill="#3e4c5a" />
+                                    <text x="265" y="200" text-anchor="middle" fill="#fff" font-size="16" class="node-label">Construction</text>
+                                    <text x="265" y="220" text-anchor="middle" fill="#fff" font-size="12">E11 Modification</text>
+                                    <rect x="372" y="182" width="165" height="44" rx="8" fill="#b98b4e" />
+                                    <text x="454" y="201" text-anchor="middle" fill="#fff" font-size="15" class="node-label">World War II</text>
+                                    <text x="454" y="218" text-anchor="middle" fill="#fff" font-size="12">P10 falls within</text>
+                                    <rect x="190" y="250" width="150" height="48" rx="8" fill="#b98b4e" />
+                                    <text x="265" y="271" text-anchor="middle" fill="#fff" font-size="16" class="node-label">Geometry</text>
+                                    <text x="265" y="289" text-anchor="middle" fill="#fff" font-size="12">GeoJSON node</text>
                                 </svg>
                             </div>
                             <div class="fragment">
@@ -244,14 +218,14 @@
                                 <svg class="diagram" viewBox="0 0 540 310" role="img" aria-label="Resources linked into a network">
                                     <g stroke="#dcd8d3" stroke-width="3">
                                         <line x1="270" y1="160" x2="120" y2="75" /><line x1="270" y1="160" x2="420" y2="75" /><line x1="270" y1="160" x2="95" y2="215" />
-                                        <line x1="270" y1="160" x2="445" y2="220" /><line x1="270" y1="160" x2="270" y2="275" /><line x1="120" y1="75" x2="40" y2="130" />
+                                        <line x1="270" y1="160" x2="445" y2="220" /><line x1="270" y1="160" x2="270" y2="258" /><line x1="120" y1="75" x2="40" y2="130" />
                                     </g>
                                     <circle cx="270" cy="160" r="44" fill="#1f2326" />
                                     <text x="270" y="155" text-anchor="middle" fill="#fff" font-size="16" class="node-label">Paul R.</text>
                                     <text x="270" y="175" text-anchor="middle" fill="#fff" font-size="16" class="node-label">Williams</text>
                                     <g fill="#c4151a">
                                         <circle cx="120" cy="75" r="22" /><circle cx="420" cy="75" r="22" /><circle cx="95" cy="215" r="22" />
-                                        <circle cx="445" cy="220" r="22" /><circle cx="270" cy="275" r="22" />
+                                        <circle cx="445" cy="220" r="22" /><circle cx="270" cy="258" r="22" />
                                     </g>
                                     <circle cx="40" cy="130" r="16" fill="#3e4c5a" />
                                     <text x="120" y="40" text-anchor="middle" fill="#4a4f55" font-size="16">Rancho Vega</text>
@@ -259,14 +233,16 @@
                                     <text x="95" y="258" text-anchor="middle" fill="#4a4f55" font-size="16">Second Baptist Church</text>
                                     <text x="445" y="263" text-anchor="middle" fill="#4a4f55" font-size="16">Golden State Mutual</text>
                                     <text x="40" y="166" text-anchor="middle" fill="#4a4f55" font-size="15">Lockheed-Vega</text>
+                                    <text x="270" y="301" text-anchor="middle" fill="#4a4f55" font-size="16">Angelus Funeral Home</text>
                                 </svg>
                             </div>
                         </div>
-                        <p class="caption">Every node-edge-node path is a triple: <strong>subject → predicate → object</strong>, for example <em>Production → P14 carried out by → Paul R. Williams</em>.</p>
+                        <p class="caption">Every node-edge-node path is a triple: <strong>subject → predicate → object</strong>, for example <em>Activity → P14 carried out by → Paul R. Williams</em>.</p>
                         <aside class="notes">
-                            <p>⏱ 3:45 to 4:30</p>
+                            <p>⏱ 2:45 to 3:30</p>
                             <ul>
-                                <li>Left: a resource model is itself a graph; each node has an ontology class and each edge a property.</li>
+                                <li>Left: a resource model is itself a graph; each node has an ontology class and each edge a property. These are the real arches-her paths, slightly simplified (the actor sits one activity deeper, under P9 consists of).</li>
+                                <li>World War II is a node too: the construction falls within a Period resource, so "built during the war" is a link, not a string.</li>
                                 <li>Click: resources link to each other, so the whole dataset becomes a network.</li>
                                 <li>Define "triple" in one breath. Don't say RDF more than once.</li>
                                 <li>Optional (down arrow): the real graph designer for the Person model.</li>
@@ -283,35 +259,37 @@
                     </section>
                 </section>
 
-                <!-- Slide 7: Keep your features: Arches speaks GIS -->
+                <!-- Slide 6: Keep your features: Arches speaks GIS -->
                 <section>
-                    <p class="eyebrow">02 · The model</p>
+                    <p class="eyebrow">01 · The model</p>
                     <h2>Keep your features: Arches speaks GIS</h2>
                     <div class="gis-layout">
                         <ul class="small gis-list">
-                            <li><strong>PostGIS:</strong> geometries live where the rest of your data does</li>
-                            <li><strong>Views for QGIS and OGC services:</strong> geometry plus attributes, including ones derived from relationships</li>
-                            <li><strong>APIs:</strong> GeoJSON and vector tiles</li>
-                            <li><strong>GeoLibre plugin</strong> <span class="muted">(experimental, needs Arches 8.2):</span> live, permission-aware editing in the browser</li>
+                            <li><strong>PostGIS:</strong> geometry lives with the rest of your data</li>
+                            <li><strong>Spatial views:</strong> open in QGIS; publish with GeoServer or pg_featureserv</li>
+                            <li><strong>APIs:</strong> GeoJSON, vector tiles</li>
+                            <li><strong>GeoLibre plugin</strong> <span class="muted">(experimental, Arches 8.2)</span>: live editing in the browser</li>
                         </ul>
                         <figure style="margin: 0">
-                            <img class="screenshot" src="assets/screenshots/qgis-spatial-view.png" alt="QGIS 4.2 showing Rancho Vega's footprints from a PostGIS view of the Arches data, with an attribute table listing Paul R. Williams's works and their designations" />
-                            <figcaption class="caption">QGIS 4.2 reading a PostGIS view of the demo data. The architect column comes from Arches relationships; only Rancho Vega isn't a designated landmark.</figcaption>
+                            <img class="screenshot" src="assets/screenshots/qgis-spatial-view-cropped.png" alt="QGIS 4.2 showing Rancho Vega's footprints from a PostGIS view of the Arches data, with an attribute table listing Paul R. Williams's works and their designations" />
+                            <figcaption class="caption">QGIS 4.2 reading a PostGIS view of the demo data. The architect column comes from Arches relationships. Of his works with footprints here, only Rancho Vega isn't a designated landmark.</figcaption>
                         </figure>
                     </div>
                     <aside class="notes">
-                        <p>⏱ 4:30 to 5:15</p>
+                        <p>⏱ 3:30 to 4:15</p>
                         <ul>
                             <li><em>"Features are fast, familiar and powerful. Keep them. Arches stores geometry in PostGIS; the question is where the context lives."</em></li>
                             <li>Point at the QGIS table: an ordinary PostGIS view, but the architect column is a relationship, not a field anyone typed in.</li>
-                            <li>Be candid: the GeoLibre plugin is experimental and depends on Arches 8.2.</li>
+                            <li>OGC: Arches doesn't serve OGC APIs itself. Its spatial views are plain PostGIS, so GeoServer or pg_featureserv can publish them. A native OGC API Features endpoint is a good contribution (slide 12).</li>
+                            <li>The table only holds works with polygons. Two more undesignated LA works (UCLA La Kretz, Hahn Hall) are points; they show up in the demo query.</li>
+                            <li>Be candid: the GeoLibre plugin is experimental and depends on Arches 8.2, which hasn't been released yet.</li>
                             <li>Transition: <em>"Let me show you what this looks like with real Los Angeles data."</em></li>
                         </ul>
                     </aside>
                 </section>
 
                 <!-- ============================================================
-                     3. DEMO (5:15 to 12:30)
+                     3. DEMO (4:15 to 13:00)
                      Part 1 (Arches) is live. Vertical stack under the title
                      card: the full recorded demo, then captioned screenshots.
                      Part 2 (GeoLibre) is the next horizontal slide.
@@ -319,27 +297,28 @@
 
                 <section>
                     <section class="dark" data-background-color="#1f2326">
-                        <p class="eyebrow">03 · Demo</p>
+                        <p class="eyebrow">02 · Demo</p>
                         <h2>Arches + GeoLibre, real LA data</h2>
                         <ol class="demo-steps">
                             <li><strong>Screen an area:</strong> what's here, and why does it matter?</li>
                             <li><strong>Follow the relationships:</strong> from a parcel to an architect to a city-wide network</li>
+                            <li><strong>Ask what a flat layer can't:</strong> which of his works aren't landmarks?</li>
                             <li><strong>Bring it into your GIS:</strong> GeoLibre, in both directions</li>
                         </ol>
                         <p class="small muted" style="margin-top: 1.2em">1,343 LA Historic-Cultural Monuments (City Planning) · Wikidata · LA County Assessor · OpenStreetMap</p>
                         <aside class="notes">
-                            <p>⏱ 5:15. Switch to the browser for steps 1 and 2, live, about 5 minutes. Script: notes/foss4gna/demo_script.md.</p>
+                            <p>⏱ 4:15. Switch to the browser for steps 1 to 3, live, about 5 minutes. Script: notes/foss4gna/demo_script.md.</p>
                             <ul>
-                                <li>Then come back and press RIGHT for step 3: the recorded GeoLibre segment.</li>
+                                <li>Then come back and press RIGHT for step 4: the recorded GeoLibre segment.</li>
                                 <li>If the live part fails: press DOWN for the full recorded demo (captioned), or DOWN twice for captioned screenshots. Don't troubleshoot on stage.</li>
                             </ul>
                         </aside>
                     </section>
                     <section>
-                        <p class="eyebrow">Demo backup · The whole demo, recorded (3 min)</p>
+                        <p class="eyebrow">Demo backup · The whole demo, recorded (2:50)</p>
                         <video class="screenshot-full" data-src="assets/video/foss4gna-demo.mp4" poster="assets/video/foss4gna-demo-poster.png" controls muted playsinline></video>
                         <aside class="notes">
-                            <p>The full demo as one captioned video: corridor search, Rancho Vega's record and relationships, Williams's works, Arches in GeoLibre, mapping the Lockheed-Vega plant, and the review in Arches.</p>
+                            <p>The full demo as one captioned video: corridor search, Rancho Vega's record and labelled relationships, Williams's works, the "not landmarks" query in arches-search, Arches in GeoLibre, mapping the Lockheed-Vega plant, and the review in Arches.</p>
                             <ul>
                                 <li>Press play (it doesn't autoplay) and narrate over the captions. Press F on the video for full screen.</li>
                                 <li>Recorded with scripts/record-demo.mjs.</li>
@@ -349,11 +328,11 @@
                     </section>
                     <section>
                         <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/search-rancho-vega.png" alt="Arches search showing Rancho Vega's red footprints over North Hollywood, with four related records in the results" />
+                            <img class="screenshot" src="assets/screenshots/search-rancho-vega.png" alt="Arches search with a corridor map filter over North Hollywood, returning Rancho Vega" />
                             <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 1/9</p>
+                                <p class="eyebrow">Demo recap · A · Arches · 1/10</p>
                                 <h3>Screen an area</h3>
-                                <p>A search over a hypothetical corridor in North Hollywood returns Rancho Vega and the records linked to it: its developer, the SurveyLA survey and the Lockheed-Vega plant.</p>
+                                <p>A map filter over a hypothetical utility corridor in North Hollywood returns one inventoried resource: Rancho Vega, which isn't a designated landmark.</p>
                                 <p class="so-what">So far, any GIS can do this.</p>
                             </div>
                         </div>
@@ -363,7 +342,7 @@
                         <div class="recap">
                             <img class="screenshot" src="assets/screenshots/report-rancho-vega-top.png" alt="The Rancho Vega report: a header map of 27 building footprints and its names" />
                             <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 2/9</p>
+                                <p class="eyebrow">Demo recap · A · Arches · 2/10</p>
                                 <h3>An unremarkable record</h3>
                                 <p>On its own, Rancho Vega looks ordinary: 27 building footprints, garden apartments, built in 1945, not a designated landmark.</p>
                                 <p class="so-what">Its geometry is one value among many.</p>
@@ -375,7 +354,7 @@
                         <div class="recap">
                             <img class="screenshot crop-left" src="assets/screenshots/report-rancho-vega-actors.png" alt="The Rancho Vega report's associated people and organizations: Paul Revere Williams as Architect and Rancho Vega Housing Corporation as Developer" />
                             <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 3/9</p>
+                                <p class="eyebrow">Demo recap · A · Arches · 3/10</p>
                                 <h3>…and who it's connected to</h3>
                                 <p>Paul R. Williams as Architect. The Rancho Vega Housing Corporation as Developer. Associated with the Lockheed-Vega plant. Cross-referenced to the county assessor's parcel.</p>
                                 <p class="so-what">Each of these is a typed relationship, not a text field.</p>
@@ -385,11 +364,11 @@
                     </section>
                     <section>
                         <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/related-rancho-vega.png" alt="Arches related-resources graph centered on Rancho Vega, linking ten records" />
+                            <img class="screenshot" src="assets/screenshots/related-rancho-vega.png" alt="Arches related-resources graph centered on Rancho Vega, with labelled links to ten records" />
                             <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 4/9</p>
+                                <p class="eyebrow">Demo recap · A · Arches · 4/10</p>
                                 <h3>Rancho Vega's relationships</h3>
-                                <p>Eleven relationships: the architect, the developer, the plant it housed workers for, the survey that identified it, World War II, and the sources behind those claims, including HistoricPlacesLA.</p>
+                                <p>Ten labelled links: designed by Williams, housed workers of the Lockheed-Vega plant, identified by SurveyLA, built during the war, and five sources, among them HistoricPlacesLA.</p>
                                 <p class="so-what">This network is what makes Rancho Vega significant.</p>
                             </div>
                         </div>
@@ -399,10 +378,22 @@
                         <div class="recap">
                             <img class="screenshot" src="assets/screenshots/related-paul-r-williams.png" alt="Arches related-resources graph centered on Paul Revere Williams, linking his works" />
                             <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 5/9</p>
+                                <p class="eyebrow">Demo recap · A · Arches · 5/10</p>
                                 <h3>Follow the architect</h3>
-                                <p>Williams links to 16 works. Seven are LA Historic-Cultural Monuments; the City's own monument layer has no architect field to show that.</p>
-                                <p class="so-what">Rancho Vega is one of the few that isn't designated.</p>
+                                <p>Williams links to 16 works in this dataset, seven of them LA Historic-Cultural Monuments. The City's own monument layer has no architect field to show that.</p>
+                                <p class="so-what">The network runs through the architect, not the parcel.</p>
+                            </div>
+                        </div>
+                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
+                    </section>
+                    <section>
+                        <div class="recap">
+                            <img class="screenshot" src="assets/screenshots/search-williams-undesignated.png" alt="Arches search for Monuments designed by Paul R. Williams that have no Historic-Cultural Monument designation, listing Rancho Vega among the results" />
+                            <div class="recap-caption">
+                                <p class="eyebrow">Demo recap · A · Arches · 6/10</p>
+                                <h3>Ask what a flat layer can't</h3>
+                                <p>Which of Williams's works aren't LA landmarks? One query: Monuments whose actor is Williams and with no Historic-Cultural Monument designation. Nine works; one of them is in the corridor.</p>
+                                <p class="so-what">"Designed by" is a relationship you can query, not a string to parse.</p>
                             </div>
                         </div>
                         <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
@@ -411,7 +402,7 @@
                         <div class="recap">
                             <img class="screenshot" src="assets/screenshots/geolibre-rancho-vega.png" alt="GeoLibre Web with the Arches plugin, showing Rancho Vega's footprints from the Arches Monument layer" />
                             <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · B · GeoLibre · 6/9</p>
+                                <p class="eyebrow">Demo recap · B · GeoLibre · 7/10</p>
                                 <h3>Arches data in GeoLibre</h3>
                                 <p>GeoLibre, an open-source GIS that runs entirely in the browser, loads the Arches Monument layer through the plugin. Same footprints, same permissions.</p>
                                 <p class="so-what">The relationships stay in Arches; the GIS still gets the geometry.</p>
@@ -423,7 +414,7 @@
                         <div class="recap">
                             <img class="screenshot" src="assets/screenshots/geolibre-worklist.png" alt="The plugin's worklist finding the Lockheed-Vega plant, the one Monument with no geometry" />
                             <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · B · GeoLibre · 7/9</p>
+                                <p class="eyebrow">Demo recap · B · GeoLibre · 8/10</p>
                                 <h3>A record with no geometry</h3>
                                 <p>The plugin asks Arches for records with no geometry and finds one: the Lockheed-Vega plant, known only from documentary sources.</p>
                                 <p class="so-what">No spatial view, and no map, can show a record that has no geometry yet.</p>
@@ -435,7 +426,7 @@
                         <div class="recap">
                             <img class="screenshot" src="assets/screenshots/geolibre-pushed.png" alt="A rough footprint drawn for the plant near the Burbank airport, pushed to Arches and awaiting review" />
                             <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · B · GeoLibre · 8/9</p>
+                                <p class="eyebrow">Demo recap · B · GeoLibre · 9/10</p>
                                 <h3>Resource-first editing</h3>
                                 <p>A contributor draws a rough footprint near the Burbank airport and pushes it to Arches. Because they aren't a reviewer, it's saved as a provisional edit.</p>
                                 <p class="so-what">The record existed semantically before it existed spatially.</p>
@@ -445,11 +436,11 @@
                     </section>
                     <section>
                         <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/arches-provisional-edit.png" alt="Arches resource editor for the Lockheed-Vega plant, showing that provisional edits are pending review" />
+                            <img class="screenshot" src="assets/screenshots/arches-provisional-edit.png" alt="Arches resource editor for the Lockheed-Vega plant, showing the contributor's provisional footprint on the map, pending review" />
                             <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · B · GeoLibre · 9/9</p>
+                                <p class="eyebrow">Demo recap · B · GeoLibre · 10/10</p>
                                 <h3>Back in Arches, for review</h3>
-                                <p>A reviewer opens the plant in Arches and sees the new geometry waiting for approval, along with the rest of the record's context.</p>
+                                <p>A reviewer opens the plant in Arches, picks the contributor's provisional edit, and sees the proposed footprint on the map before approving it.</p>
                                 <p class="so-what">Context was added without bypassing governance.</p>
                             </div>
                         </div>
@@ -457,12 +448,12 @@
                     </section>
                 </section>
 
-                <!-- Slide 9: Demo part 2, GeoLibre (recorded) -->
+                <!-- Slide 8: Demo part 2, GeoLibre (recorded) -->
                 <section>
-                    <p class="eyebrow">03 · Demo · Bring it into your GIS (recorded)</p>
-                    <video class="screenshot-full" data-src="assets/video/foss4gna-demo-geolibre.mp4" poster="assets/video/foss4gna-demo-geolibre-poster.png" controls muted playsinline></video>
+                    <p class="eyebrow">02 · Demo · Bring it into your GIS (recorded)</p>
+                    <video class="screenshot-full demo-video" data-src="assets/video/foss4gna-demo-geolibre.mp4" poster="assets/video/foss4gna-demo-geolibre-poster.png" controls muted playsinline></video>
                     <aside class="notes">
-                        <p>⏱ about 10:15 to 12:30. Press play (no autoplay) and narrate over it.</p>
+                        <p>⏱ about 11:15 to 13:00. Press play (no autoplay) and narrate over it. If the room is large, use the video's own full-screen button; Esc returns to the deck.</p>
                         <ul>
                             <li><em>"This is GeoLibre: open source, and it runs entirely in the browser. The Arches plugin is experimental, so I recorded this part."</em></li>
                             <li>Signed in as a contributor, not a reviewer. Same data, same permissions as Arches.</li>
@@ -474,12 +465,12 @@
                 </section>
 
                 <!-- ============================================================
-                     4. PAYOFF (12:30 to 14:15)
+                     4. PAYOFF (13:00 to 15:00)
                      ============================================================ -->
 
-                <!-- Slide 10: Legible, not just fast -->
+                <!-- Slide 9: Legible, not just fast -->
                 <section>
-                    <p class="eyebrow">04 · The payoff</p>
+                    <p class="eyebrow">03 · The payoff</p>
                     <h2>Legible, not just fast</h2>
                     <div class="columns wide-right">
                         <div class="stack">
@@ -491,114 +482,115 @@
                                 <li><strong>For people:</strong> readable relationships, backed by evidence</li>
                                 <li><strong>For machines:</strong> explicit classes and properties, not column names to decode</li>
                             </ul>
+                            <p class="small so-what">An AI agent can follow <em>P14 carried out by</em>. It can only guess what <em>BLT_BY</em> means.</p>
                         </div>
                         <div>
                             <p class="small muted">The same fact, exported from Arches as JSON-LD</p>
 <pre class="code"><span class="dim">{</span>
   <span class="term">"@type"</span>: <span class="literal">"crm:E18_Physical_Thing"</span>,
-  <span class="dim">...</span>
-  <span class="term">"crm:P14_carried_out_by"</span>: <span class="dim">{</span>
-    <span class="term">"@id"</span>: <span class="literal">".../resources/8ec6c939-…"</span>,
-    <span class="term">"@type"</span>: <span class="literal">"crm:E21_Person"</span>
-  <span class="dim">}</span>,
-  <span class="term">"crm:P2_has_type"</span>: <span class="dim">{</span>
-    <span class="term">"rdfs:label"</span>: <span class="literal">"Architect"</span>
-  <span class="dim">}</span>,
-  <span class="term">"crm:P4_has_time-span"</span>: <span class="dim">{</span>
-    <span class="term">"crm:P3_has_note"</span>: <span class="literal">"1945"</span>
+  <span class="term">"crm:P12i_was_present_at"</span>: <span class="dim">{</span>
+    <span class="term">"@type"</span>: <span class="literal">"crm:E7_Activity"</span>,
+    <span class="term">"crm:P9_consists_of"</span>: <span class="dim">{</span>
+      <span class="term">"@type"</span>: <span class="literal">"crm:E7_Activity"</span>,
+      <span class="term">"crm:P14_carried_out_by"</span>: <span class="dim">{</span>
+        <span class="term">"@id"</span>: <span class="literal">".../resources/8ec6c939-…"</span>,
+        <span class="term">"@type"</span>: <span class="literal">"crm:E21_Person"</span>
+      <span class="dim">}</span>,
+      <span class="term">"crm:P2_has_type"</span>: <span class="dim">{</span>
+        <span class="term">"rdfs:label"</span>: <span class="literal">"Architect"</span>
+      <span class="dim">}</span>
+    <span class="dim">}</span>
   <span class="dim">}</span>
 <span class="dim">}</span></pre>
-                            <p class="caption">Trimmed from Rancho Vega's real export; namespaces shortened.</p>
+                            <p class="caption">Rancho Vega's real export, one path kept; tile ids removed, namespaces shortened.</p>
                         </div>
                     </div>
-                    <p class="closing-line">The same structure that makes data FAIR for people makes it legible to AI systems.</p>
                     <aside class="notes">
-                        <p>⏱ 12:30 to 13:30</p>
+                        <p>⏱ 13:00 to 14:15</p>
                         <ul>
-                            <li>Left: what most systems store. Right: what Arches exports for the same fact.</li>
+                            <li>Left: what most systems store. Right: what Arches exports for the same fact. It's the real export with one path kept; nothing reordered.</li>
                             <li><em>"Who is P. Williams? Which one? In what role? The export answers all three without a data dictionary."</em></li>
-                            <li>Closing line: explicit classes and properties are what LLMs and agents need too; a question like "which assets did this architect design?" becomes a traversal, not a guessed join.</li>
+                            <li>AI, concretely: hand an agent the question from the demo, "which of Williams's works aren't landmarks?" With this export it follows P14 to a Person with a stable id and checks the designation type. With the flat table it has to guess that BLT_BY is an architect and that "P. Williams" is the same person everywhere.</li>
+                            <li>The same explicit structure is what makes the data FAIR for people: findable, interoperable, reusable.</li>
+                            <li>If a CIDOC CRM person asks: the inner activity is arches-her's grouping for associated actors; the construction itself is an E11 Modification linked with CRMsci O18i.</li>
                         </ul>
                     </aside>
                 </section>
 
-                <!-- Slide 11: Better decisions -->
+                <!-- Slide 10: Better decisions -->
                 <section class="dark" data-background-color="#1f2326">
                     <div style="display: flex; flex-direction: column; justify-content: center; height: 100%">
-                        <p class="eyebrow">04 · The payoff</p>
+                        <p class="eyebrow">03 · The payoff</p>
                         <h2 style="max-width: 18em">The parcel layer said "five or more apartments, 1945."</h2>
                         <h2 class="fragment" style="max-width: 18em"><span class="accent">The graph showed significance before the bulldozer arrived.</span></h2>
                         <p class="lede fragment">Integrated spatial and semantic data means fewer surprises, faster review, and decisions you can defend.</p>
                     </div>
                     <aside class="notes">
-                        <p>⏱ 13:30 to 14:15</p>
+                        <p>⏱ 14:15 to 15:00</p>
                         <ul>
-                            <li>Go back to the (hypothetical) corridor screening from the demo.</li>
+                            <li>Go back to the (hypothetical) corridor screening from the demo. The query that found Rancho Vega ran through "designed by", not through anything on the parcel.</li>
                             <li>Generalize: the same is true for utilities, transportation and natural resources.</li>
                         </ul>
                     </aside>
                 </section>
 
                 <!-- ============================================================
-                     5. BEYOND HERITAGE + GET INVOLVED (14:15 to 16:00)
+                     5. BEYOND HERITAGE + GET INVOLVED (15:00 to 17:30)
                      ============================================================ -->
 
-                <!-- Slide 12: Beyond heritage -->
+                <!-- Slide 11: Beyond heritage -->
                 <section>
-                    <p class="eyebrow">05 · Beyond heritage</p>
+                    <p class="eyebrow">04 · Beyond heritage</p>
                     <h2>Not just heritage</h2>
                     <div class="columns four">
-                        <div class="card compact"><h3>Port of San Francisco</h3><p>Development projects, construction permitting, environmental review</p></div>
-                        <div class="card compact"><h3>Union Sanitary District</h3><p>East Bay wastewater collection and treatment; parcel data and import workflows</p></div>
-                        <div class="card compact"><h3>BC Fossil Management System</h3><p>Fossil sites, collections and permits, British Columbia</p></div>
-                        <div class="card compact quiet"><h3>Arches for Science</h3><p>Conservation science lab data (CNR DataSpace); heritage-adjacent</p></div>
+                        <div class="card compact"><h3>Port of San Francisco</h3><p>Development projects, permitting, environmental review</p></div>
+                        <div class="card compact"><h3>Union Sanitary District</h3><p>East Bay wastewater collection and treatment</p></div>
+                        <div class="card compact"><h3>BC Fossil Management System</h3><p>Fossil sites, collections and permits</p></div>
+                        <div class="card compact quiet"><h3>Arches for Science</h3><p>Conservation science lab data; heritage-adjacent</p></div>
                     </div>
-                    <p class="small" style="margin-top: 0.8em"><strong>One core, many applications:</strong> heritage inventories · Arches for Science · RaSColls (reference and sample collections) · Lingo (shared vocabularies)</p>
+                    <p class="small" style="margin-top: 0.8em"><strong>One open core, many applications:</strong> heritage inventories · Arches for Science · RaSColls (reference and sample collections) · Lingo (shared vocabularies)</p>
                     <div class="spectrum" style="margin-top: 0.9em"><div class="spectrum-marker"></div></div>
                     <div class="spectrum-labels">
                         <div><strong>Few relationships</strong><br />a flat attribute table is fine</div>
-                        <div><strong>Dense relationships</strong><br />a semantic graph pays off</div>
+                        <div><strong>Provenance, events, evidence, vocabularies, uncertain dates</strong><br />a semantic graph pays off</div>
                     </div>
                     <aside class="notes">
-                        <p>⏱ 14:15 to 15:15</p>
+                        <p>⏱ 15:00 to 16:15</p>
                         <ul>
+                            <li>Frame these as deployments of an open platform, not a client list. Farallon built some of them; say so plainly, and point to archesproject.org for implementations by other organizations.</li>
                             <li>Two of these are just down the road: the Port of San Francisco and Union Sanitary District in the East Bay.</li>
                             <li>Arches for Science is heritage-adjacent, but it's lab data, not inventory: instruments, experiments, results.</li>
+                            <li>The right-hand label is the old "asset table" point: who verified it, what backs it up, what the type means, when it really happened. Every one of those is a relationship flattened into a column.</li>
                             <li><em>"Same core, different applications. And most real assets sit further right on this line than their databases assume."</em></li>
                         </ul>
                     </aside>
                 </section>
 
-                <!-- Slide 13: Come build with us -->
+                <!-- Slide 12: Come build with us -->
                 <section>
                     <p class="eyebrow">Open source</p>
                     <h2>Come build with us</h2>
-                    <div class="columns wide-left">
-                        <div>
-                            <ul class="small">
-                                <li><strong>Arches</strong> (AGPL-3.0): <a href="https://github.com/archesproject/arches">github.com/archesproject/arches</a></li>
-                                <li><strong>The Arches project:</strong> <a href="https://www.archesproject.org/">archesproject.org</a>, with docs, community forum and implementations</li>
-                                <li><strong>These slides:</strong> <a href="https://rgaston.com/foss4gna_2026/">rgaston.com/foss4gna_2026</a></li>
-                            </ul>
-                            <p class="small muted">Good places to start: GIS integrations (QGIS, OGC API Features, GeoLibre), extensions, shared vocabularies.</p>
-                        </div>
-                        <div class="columns three" style="gap: 0.6em">
-                            <div class="qr"><img src="assets/qr/qr-slides.svg" alt="QR code for rgaston.com/foss4gna_2026" />Slides</div>
-                            <div class="qr"><img src="assets/qr/qr-arches-github.svg" alt="QR code for github.com/archesproject/arches" />Arches on GitHub</div>
-                            <div class="qr"><img src="assets/qr/qr-archesproject.svg" alt="QR code for archesproject.org" />archesproject.org</div>
-                        </div>
+                    <ul class="small">
+                        <li><strong>Arches</strong> (AGPL-3.0): <a href="https://github.com/archesproject/arches">github.com/archesproject/arches</a> · docs, forum and implementations at <a href="https://www.archesproject.org/">archesproject.org</a></li>
+                        <li><strong>GeoLibre plugin</strong> <span class="muted">(experimental, needs Arches 8.2, upcoming)</span>: <a href="https://github.com/fargeo/arches-geolibre">github.com/fargeo/arches-geolibre</a></li>
+                        <li><strong>Good first contributions:</strong> OGC API Features, QGIS tooling, the GeoLibre plugin, shared vocabularies</li>
+                    </ul>
+                    <div class="columns three qr-row">
+                        <div class="qr"><img src="assets/qr/qr-slides.svg" alt="QR code for rgaston.com/foss4gna_2026" />Slides: rgaston.com/foss4gna_2026</div>
+                        <div class="qr"><img src="assets/qr/qr-arches-github.svg" alt="QR code for github.com/archesproject/arches" />Arches on GitHub</div>
+                        <div class="qr"><img src="assets/qr/qr-archesproject.svg" alt="QR code for archesproject.org" />archesproject.org</div>
                     </div>
                     <aside class="notes">
-                        <p>⏱ 15:15 to 16:00</p>
+                        <p>⏱ 16:15 to 17:15</p>
                         <ul>
                             <li>This is the FOSS4G ask: use it, break it, contribute.</li>
-                            <li>Leave the slide up while people scan the codes. The slides URL goes live before the talk.</li>
-                            <li>The GeoLibre plugin is still experimental, so it isn't linked; mention it only if asked.</li>
+                            <li>The GeoLibre plugin is experimental: say so, and invite people to try it and file issues. It's exactly the kind of thing this room tests.</li>
+                            <li>Leave the slide up while people scan the codes. The slides URL goes live before the talk, and it links everything else.</li>
                         </ul>
                     </aside>
                 </section>
 
-                <!-- Slide 14: Questions -->
+                <!-- Slide 13: Questions -->
                 <section class="dark title-slide" data-background-color="#1f2326">
                     <p class="eyebrow">Thank you</p>
                     <h1>Questions?</h1>
@@ -613,7 +605,7 @@
                         <img src="assets/brand/farallon-logo-white.png" alt="Farallon Geographics" />
                     </div>
                     <aside class="notes">
-                        <p>⏱ about 16:00, then Q&amp;A. That leaves roughly 9 minutes of buffer: spend it on the live demo or on questions.</p>
+                        <p>⏱ about 17:30, then Q&amp;A. That leaves about 7 minutes for questions and the changeover.</p>
                         <p>Prepared answers are in notes/foss4gna/outline.md ("Likely questions").</p>
                     </aside>
                 </section>
@@ -631,7 +623,8 @@
                 margin: 0.04,
                 center: false,
                 hash: true,
-                controls: true,
+                // Presented with a clicker; the arrows overlapped slide content.
+                controls: false,
                 progress: true,
                 // Main-line number only, so the optional vertical slides don't inflate the total.
                 slideNumber: (slide) => [String(Reveal.getIndices(slide).h + 1)],

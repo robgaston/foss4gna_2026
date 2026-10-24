@@ -56,16 +56,17 @@ async function zoomTowards(studio, coordinate, steps) {
     const { page, pause } = studio;
     for (let step = 0; step < steps; step += 1) {
         const point = await studio.screenPoint(coordinate);
-        await page.mouse.move(point.x, point.y, { steps: 10 });
-        await page.mouse.wheel(0, -300);
-        await pause(700);
+        await page.mouse.move(point.x, point.y, { steps: 8 });
+        await page.mouse.wheel(0, -600);
+        await pause(500);
     }
-    await pause(1500);
+    await pause(1000);
 }
 
 export async function showArchesInGeoLibre(studio, director) {
     const { panel, pause, glideAndClick } = studio;
-    await director.goto(harness.GEOLIBRE_URL);
+    // The globe's imagery takes a few seconds to arrive; cut that wait.
+    await director.goto(harness.GEOLIBRE_URL, () => pause(3500));
     await director.caption("GeoLibre: an open-source GIS that runs entirely in the browser");
     await pause(1500);
     await signInToPlugin(studio, director);
@@ -79,7 +80,7 @@ export async function showArchesInGeoLibre(studio, director) {
 
     await director.caption("Rancho Vega: the same 27 footprints, with the same permissions");
     await searchPlace(studio, `${RANCHO_VEGA.latitude}, ${RANCHO_VEGA.longitude}`);
-    await zoomTowards(studio, RANCHO_VEGA, 10);
+    await zoomTowards(studio, RANCHO_VEGA, 5);
     await pause(1500);
     await director.still("geolibre-rancho-vega");
     await pause(2000);
@@ -102,13 +103,9 @@ export async function mapTheUnmappedPlant(studio, director) {
     await director.still("geolibre-worklist");
 
     await director.caption("Find the plant's site near the Burbank airport");
+    // The place search lands at about zoom 16. Zooming further in leaves the
+    // basemap blank, and the airport out of sight.
     await searchPlace(studio, "Hollywood Burbank Airport");
-    const viewMenu = page.getByRole("button", { name: "View", exact: true });
-    for (let step = 0; step < 2; step += 1) {
-        await glideAndClick(viewMenu);
-        await glideAndClick(page.getByRole("menuitem", { name: "Zoom In" }));
-        await pause(700);
-    }
 
     await director.caption("Draw a rough footprint for it");
     await studio.openLayerAction(WORKLIST_LAYER_NAME, "Edit geometry");
@@ -135,6 +132,6 @@ export async function mapTheUnmappedPlant(studio, director) {
     }
     await pause(1500);
     await director.still("geolibre-pushed");
-    await director.caption("In Arches, a record can exist semantically before it exists spatially");
+    await director.caption("It stays off the map until a reviewer approves it");
     await pause(4000);
 }

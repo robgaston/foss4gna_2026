@@ -1,5 +1,6 @@
 // Records the whole FOSS4G NA demo as one captioned video: screening a
-// corridor in Arches, Rancho Vega's relationships, the Arches data in
+// corridor in Arches, Rancho Vega's relationships, the "Williams works that
+// aren't landmarks" query in arches-search, the Arches data in
 // GeoLibre, mapping the Lockheed-Vega plant (a record with no geometry), and
 // reviewing that edit back in Arches. Also saves stills for the deck's recap
 // slides. The plant's geometry is removed again afterwards.
@@ -14,10 +15,11 @@
 // build with the plugin (arches-geolibre docs/testing.md).
 
 import { execFileSync } from "node:child_process";
-import { copyFile, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import {
+    askWhatAFlatLayerCant,
     followRelationships,
     openRanchoVega,
     reviewInArches,
@@ -50,21 +52,26 @@ function titleCardHtml(heading, subheading) {
         </body></html>`;
 }
 
-/** Captions that survive page loads, and stills taken without them. */
-function createDirector(page) {
+/**
+ * Captions that survive page loads, and stills taken without them. Page
+ * loads are recorded as cuts, so blank pages and half-loaded searches can be
+ * removed from the video afterwards.
+ */
+function createDirector(page, elapsedSeconds, cuts) {
     let currentCaption = "";
-    // The harness's captions are sized for a monitor; enlarge them so they
-    // stay readable when the video plays inside a slide.
+    // The harness's captions are sized for a monitor; enlarge them (relative
+    // to the viewport) so they stay readable when the video plays in a slide.
     const showCaption = (text) =>
         page.evaluate((value) => {
             const caption = [...document.body.children].find(
                 (element) => element.style.zIndex === "2147483646",
             );
             if (caption) {
-                caption.style.font = "600 30px/1.35 system-ui, sans-serif";
-                caption.style.bottom = "64px";
+                const fontSize = Math.round(window.innerWidth / 53);
+                caption.style.font = `600 ${fontSize}px/1.35 system-ui, sans-serif`;
+                caption.style.bottom = `${fontSize * 2}px`;
                 caption.style.maxWidth = "80%";
-                caption.style.padding = "14px 26px";
+                caption.style.padding = `${Math.round(fontSize / 2)}px ${fontSize}px`;
             }
             window.showCaption(value);
         }, text);
@@ -76,10 +83,14 @@ function createDirector(page) {
             currentCaption = text;
             await showCaption(text);
         },
-        async goto(url) {
+        /** Navigates, waits for `ready`, and cuts everything in between. */
+        async goto(url, ready = () => page.waitForTimeout(800)) {
+            const cutStart = elapsedSeconds();
             await page.goto(url, { waitUntil: "networkidle" });
-            await page.waitForTimeout(800);
+            await ready();
             await showCaption(currentCaption);
+            await page.waitForTimeout(300);
+            cuts.push([cutStart, elapsedSeconds()]);
         },
         async titleCard(heading, subheading, milliseconds) {
             await page.setContent(titleCardHtml(heading, subheading));
@@ -96,6 +107,27 @@ function createDirector(page) {
     };
 }
 
+/** Seconds of `cuts` that fall before `seconds`. */
+function cutSecondsBefore(cuts, seconds) {
+    return cuts.reduce(
+        (total, [start, end]) => total + Math.max(0, Math.min(end, seconds) - start),
+        0,
+    );
+}
+
+/** Re-encodes `inputPath` without the cut ranges. */
+function removeCuts(inputPath, outputPath, cuts) {
+    const keep = cuts.length
+        ? `not(${cuts.map(([start, end]) => `between(t,${start.toFixed(2)},${end.toFixed(2)})`).join("+")})`
+        : "1";
+    execFileSync("ffmpeg", [
+        ...["-v", "error", "-y", "-i", inputPath],
+        ...["-vf", `select='${keep}',setpts=N/FRAME_RATE/TB`],
+        ...["-c:v", "libx264", "-preset", "slow", "-crf", "22", "-pix_fmt", "yuv420p"],
+        ...["-movflags", "+faststart", outputPath],
+    ]);
+}
+
 await ensurePlantHasNoGeometry();
 await mkdir(SCREENSHOT_DIRECTORY, { recursive: true });
 await mkdir(VIDEO_DIRECTORY, { recursive: true });
@@ -103,11 +135,14 @@ const previewServer = await harness.ensurePreviewServer();
 let writes = [];
 // Seconds into the recording where each part starts, for cutting clips.
 const markers = {};
+// Page loads to remove from the recording, as [start, end] seconds.
+const cuts = [];
 try {
     const recordedPath = await harness.recordVideo(VIDEO_NAME, async (studio) => {
         const recordingStarted = Date.now();
-        const mark = (name) => (markers[name] = (Date.now() - recordingStarted) / 1000);
-        const director = createDirector(studio.page);
+        const elapsedSeconds = () => (Date.now() - recordingStarted) / 1000;
+        const mark = (name) => (markers[name] = elapsedSeconds());
+        const director = createDirector(studio.page, elapsedSeconds, cuts);
         writes = recordGeometryWrites(studio.page);
         await director.titleCard(
             "Arches + GeoLibre, with real Los Angeles data",
@@ -117,6 +152,7 @@ try {
         await screenCorridor(studio, director);
         await openRanchoVega(studio, director);
         await followRelationships(studio, director);
+        await askWhatAFlatLayerCant(studio, director);
         await director.caption("");
         mark("geolibreStart");
         await director.titleCard(
@@ -136,9 +172,12 @@ try {
         );
     });
     const target = path.join(VIDEO_DIRECTORY, path.basename(recordedPath));
-    await copyFile(recordedPath, target);
+    removeCuts(recordedPath, target, cuts);
     await rm(recordedPath);
-    console.log(`Saved ${target}`);
+    for (const name of Object.keys(markers)) {
+        markers[name] -= cutSecondsBefore(cuts, markers[name]);
+    }
+    console.log(`Saved ${target} (${cuts.length} page loads cut)`);
 
     // The hybrid demo plays only the GeoLibre part, so cut it out as its own clip.
     const clipPath = path.join(VIDEO_DIRECTORY, GEOLIBRE_CLIP_NAME);

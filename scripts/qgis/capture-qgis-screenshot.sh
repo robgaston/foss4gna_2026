@@ -21,3 +21,9 @@ export QGIS_SCREENSHOT_PATH="$deck_directory/assets/screenshots/qgis-spatial-vie
     --noplugins \
     --profiles-path "$profiles_directory" \
     --code "$deck_directory/scripts/qgis/capture_qgis_screenshot.py"
+
+# The slide needs the map and attribute table to be readable when projected,
+# so crop away QGIS's toolbars, layer panel and status bar.
+ffmpeg -v error -y -i "$QGIS_SCREENSHOT_PATH" \
+    -vf "crop=2580:1520:600:160" \
+    "$deck_directory/assets/screenshots/qgis-spatial-view-cropped.png"

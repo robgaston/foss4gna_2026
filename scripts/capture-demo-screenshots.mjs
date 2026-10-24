@@ -12,6 +12,13 @@ import { mkdir } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
 
+import {
+    PERSON_GRAPH_ID,
+    corridorSearchQuery,
+    ranchoVegaSearchQuery,
+    williamsSearchQuery,
+} from "./demo/search-filters.mjs";
+
 const archesUrl = process.env.ARCHES_URL ?? "http://localhost:8003";
 const playwrightModule =
     process.env.PLAYWRIGHT_MODULE ??
@@ -26,43 +33,20 @@ const resourceIds = {
     paulRWilliams: "8ec6c939-0f1b-5bc0-aaa0-1b213c83e927",
     lockheedVegaPlant: "b54fe8e0-4754-500c-ac83-32f97df97650",
 };
-const personGraphId = "22477f01-1a44-11e9-b0a9-000d3ab1e588";
-
-const termFilter = (term) =>
-    encodeURIComponent(
-        JSON.stringify([
-            {
-                type: "string",
-                context: "",
-                context_label: "",
-                id: term,
-                text: term,
-                value: term,
-                inverted: false,
-            },
-        ]),
-    );
 
 const shots = [
-    {
-        name: "search-rancho-vega",
-        url: `/search?term-filter=${termFilter("Rancho Vega")}`,
-        waitMs: 6000,
-    },
-    {
-        name: "search-paul-r-williams",
-        url: `/search?term-filter=${termFilter("Paul Revere Williams")}`,
-        waitMs: 6000,
-    },
+    // The corridor screen from demo step A1, for recap slide 1.
+    { name: "search-rancho-vega", url: `/search?${corridorSearchQuery()}`, waitMs: 6000 },
+    { name: "search-paul-r-williams", url: `/search?${williamsSearchQuery()}`, waitMs: 6000 },
     {
         name: "related-rancho-vega",
-        url: `/search?term-filter=${termFilter("Rancho Vega")}`,
+        url: `/search?${ranchoVegaSearchQuery()}`,
         waitMs: 5000,
         clickText: "Related Resources",
     },
     {
         name: "related-paul-r-williams",
-        url: `/search?term-filter=${termFilter("Paul Revere Williams")}`,
+        url: `/search?${williamsSearchQuery()}`,
         waitMs: 5000,
         clickText: "Related Resources",
     },
@@ -86,7 +70,7 @@ const shots = [
         hideNullValues: true,
         scrollToText: "Associated People and Organizations",
     },
-    { name: "graph-designer-person", url: `/graph_designer/${personGraphId}`, waitMs: 6000, signIn: true },
+    { name: "graph-designer-person", url: `/graph_designer/${PERSON_GRAPH_ID}`, waitMs: 6000, signIn: true },
 ];
 
 async function signIn(page) {
