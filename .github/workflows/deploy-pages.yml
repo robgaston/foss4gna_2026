@@ -25,13 +25,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # dist/ is git-ignored, so build the reveal.js bundles the deck loads.
+      # (The full `npm run build` type-checks the plugins against dist/ first,
+      # which fails on a clean checkout.)
+      - name: Build reveal.js
+        run: |
+          npm ci
+          npx vite build
+          npx vite build -c vite.config.styles.ts
+          npx vite build -c plugin/notes/vite.config.ts
+          npx vite build -c plugin/zoom/vite.config.ts
+          node scripts/add-banner.js dist/reveal.js
+
+      - name: Collect the site
+        run: |
+          mkdir _site
+          cp -R index.html assets css dist lib _site/
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
