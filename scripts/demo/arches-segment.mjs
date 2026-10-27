@@ -1,6 +1,8 @@
-// The Arches parts of the demo recording: screen a corridor, open Rancho
-// Vega, follow its relationships to Paul R. Williams, and (at the end) review
-// the GeoLibre edit as a reviewer.
+// The Arches parts of the demo recording: screen a corridor in arches-search,
+// open Rancho Vega, follow its relationships to Paul R. Williams (the core
+// graph, on the demo's standalone related-resources page), ask the "not
+// landmarks" question in arches-search, and (at the end) review the GeoLibre
+// edit as a reviewer.
 
 import {
     ARCHES_URL,
@@ -8,101 +10,189 @@ import {
     PLANT_RESOURCE_ID,
     RANCHO_VEGA_RESOURCE_ID,
     REVIEWER_USERNAME,
+    WILLIAMS_RESOURCE_ID,
 } from "./config.mjs";
 import {
-    corridorSearchQuery,
-    ranchoVegaSearchQuery,
-    williamsSearchQuery,
+    ADVANCED_SEARCH_PATH,
+    CORRIDOR_BUFFER_METERS,
+    CORRIDOR_VIEW,
+    OXNARD_STREET_LATITUDE,
+    SIMPLE_SEARCH_PATH,
 } from "./search-filters.mjs";
 
-async function waitForSearchResults(page) {
-    await page.getByText(/Results: \d+ of \d+/).first().waitFor({ timeout: 30_000 });
-    await page.waitForTimeout(1000);
+/**
+ * Finds the MapLibre map behind arches-search's Vue MapComponent, so the
+ * pointer can be placed on real coordinates. Returns the map canvas's box.
+ */
+async function exposeSearchMap(page) {
+    return page.evaluate(() => {
+        let component = document.querySelector(".maplibregl-map")?.__vueParentComponent;
+        while (component && !component.exposed?.map) {
+            component = component.parent;
+        }
+        const map = component?.exposed?.map;
+        window.demoSearchMap = map?.value ?? map;
+        return window.demoSearchMap.getCanvas().getBoundingClientRect().toJSON();
+    });
 }
 
-/** Jumps without animating, to skip past sections not worth showing. */
-async function jumpTo(page, text) {
-    await page
-        .getByText(text, { exact: true })
-        .first()
-        .evaluate((element) => element.scrollIntoView({ block: "start" }));
-    await page.waitForTimeout(600);
-}
-
-async function smoothScrollTo(page, text) {
-    await page
-        .getByText(text, { exact: true })
-        .first()
-        .evaluate((element) => element.scrollIntoView({ behavior: "smooth", block: "start" }));
-    await page.waitForTimeout(1800);
+async function searchMapScreenPoint(page, lngLat) {
+    return page.evaluate((point) => {
+        const projected = window.demoSearchMap.project(point);
+        const canvas = window.demoSearchMap.getCanvas().getBoundingClientRect();
+        return { x: canvas.left + projected.x, y: canvas.top + projected.y };
+    }, lngLat);
 }
 
 export async function screenCorridor(studio, director) {
-    const { page, pause, glideTo } = studio;
-    await director.goto(`${ARCHES_URL}/search?${corridorSearchQuery()}`, () =>
-        waitForSearchResults(page),
-    );
+    const { page, pause, glideTo, glideAndClick } = studio;
+    // Steps A1-A4 run signed out, as the public sees them; the reviewer signs
+    // in only for the review at the end.
+    await director.goto(`${ARCHES_URL}${SIMPLE_SEARCH_PATH}`, async () => {
+        await page.getByRole("button", { name: "Map", exact: true }).waitFor();
+        await pause(800);
+    });
     await director.caption(
-        "Arches: screen a hypothetical utility corridor along Oxnard Street, North Hollywood",
+        "Screen a hypothetical utility corridor along Oxnard Street, North Hollywood",
+    );
+    // Monuments only: the corridor is itself an Area record, so it would match too.
+    await glideAndClick(
+        page.locator(".type-btn").filter({ has: page.locator(".type-label", { hasText: /^Monument$/ }) }),
+    );
+    await pause(1500);
+    await glideAndClick(page.getByRole("button", { name: "Map", exact: true }));
+    await pause(2000);
+    await glideAndClick(page.getByText("Draw", { exact: true }));
+    await pause(800);
+
+    // Fly to the corridor, centered in the part of the map the draw panel leaves visible.
+    const canvas = await exposeSearchMap(page);
+    // The draw panel overlays the map's right side; its "Draw type" label marks its left edge.
+    const drawPanel = await page.getByText("Draw type", { exact: true }).boundingBox();
+    const visibleRight = drawPanel.x - 20;
+    const visibleCenterX = (canvas.left + visibleRight) / 2;
+    await page.evaluate(
+        ({ view, offsetX }) =>
+            window.demoSearchMap.flyTo({ ...view, offset: [offsetX, 0], duration: 3500 }),
+        { view: CORRIDOR_VIEW, offsetX: visibleCenterX - (canvas.left + canvas.width / 2) },
     );
     await pause(4000);
-    await glideTo(page.getByText("Rancho Vega", { exact: true }).first());
+
+    await director.caption("Draw the corridor's centerline...");
+    await glideAndClick(page.locator("#draw-type"));
+    await glideAndClick(page.getByRole("option", { name: "Draw a Polyline" }));
+    await pause(500);
+    const oxnard = await searchMapScreenPoint(page, [CORRIDOR_VIEW.center[0], OXNARD_STREET_LATITUDE]);
+    const lineStart = { x: canvas.left + 25, y: oxnard.y };
+    const lineEnd = { x: visibleRight - 25, y: oxnard.y };
+    await page.mouse.move(lineStart.x, lineStart.y, { steps: 20 });
+    await page.mouse.click(lineStart.x, lineStart.y);
+    await pause(300);
+    await page.mouse.move(lineEnd.x, lineEnd.y, { steps: 40 });
+    await page.mouse.dblclick(lineEnd.x, lineEnd.y);
+    await pause(1500);
+
+    await director.caption(`...and buffer it ${CORRIDOR_BUFFER_METERS} m`);
+    const bufferInput = page.locator(".buffer-controls input").first();
+    await glideAndClick(bufferInput);
+    await bufferInput.press("ControlOrMeta+A");
+    await bufferInput.pressSequentially(String(CORRIDOR_BUFFER_METERS), { delay: 120 });
+    await bufferInput.press("Tab");
+    const oneResult = page.getByText(/^1 results?$/);
+    await oneResult.waitFor({ timeout: 30_000 });
+    await pause(1500);
     await director.caption(
         "One inventoried resource is in the way: Rancho Vega. It isn't a designated landmark",
     );
-    await pause(3500);
+    await glideTo(page.getByText("Rancho Vega", { exact: true }).first());
+    await pause(3000);
+    await pause(500);
 }
 
+// Demo step A2: Rancho Vega's report, an arches-modular-reports report
+// configured in the demo project (header, key facts, footprint map, tabs).
 export async function openRanchoVega(studio, director) {
-    const { page, pause } = studio;
+    const { page, pause, glideTo, glideAndClick } = studio;
     await director.caption("");
     await director.goto(`${ARCHES_URL}/report/${RANCHO_VEGA_RESOURCE_ID}`, async () => {
-        await page.getByRole("switch", { name: "Hide Null Values" }).click();
-        await page.waitForTimeout(600);
+        await page.locator(".report-map .maplibregl-canvas").waitFor({ timeout: 30_000 });
+        await pause(2500);
     });
-    // The report prints geometry as raw GeoJSON; the header map already shows it.
-    await page
-        .getByText("Geospatial Coordinates", { exact: true })
-        .evaluateAll((labels) =>
-            labels.forEach((label) => {
-                const row = label.closest(".row, tr, dl, div[class*='row']") ?? label.parentElement;
-                row.style.display = "none";
-            }),
-        );
-    await page.waitForTimeout(600);
     await director.caption(
-        "On its own, an unremarkable record: garden apartments, 27 building footprints, built 1945",
+        "On its own, an unremarkable record: garden apartments, 21 buildings, built 1945",
+    );
+    await glideTo(page.locator(".report-map"));
+    await pause(2500);
+    await pause(1500);
+    await director.caption("Its type comes from a shared vocabulary; its dates are data, not text");
+    // The section shortcuts under each tab are anchors without an href.
+    await glideAndClick(
+        page.locator(".linked-section-button-container a").filter({ hasText: /^Construction$/ }).first(),
     );
     await pause(3500);
-    await smoothScrollTo(page, "Descriptions");
-    await pause(2500);
-    // The Geometry section prints raw GeoJSON, so jump straight past it.
-    await jumpTo(page, "Construction Phases");
-    await director.caption("Its type comes from a shared vocabulary; its dates are data, not text");
-    await pause(3000);
-    await smoothScrollTo(page, "Associated People and Organizations");
     await director.caption(
         "But look at who it's connected to: Paul R. Williams, architect, and the Lockheed-Vega plant",
     );
-    await pause(4500);
+    await glideAndClick(page.getByRole("tab", { name: "People and context" }));
+    await page.getByText("Architect", { exact: true }).first().waitFor({ timeout: 15_000 });
+    await pause(1000);
+    await glideTo(page.getByRole("link", { name: "Paul Revere Williams" }).first());
+    await pause(2500);
+    await pause(2000);
 }
 
+/**
+ * Where a resource's node is in the related-resources graph. Cytoscape keeps
+ * its instance on the container element.
+ */
+async function graphNodeScreenPoint(page, resourceId) {
+    return page.evaluate((nodeId) => {
+        const container = [...document.querySelectorAll("div")].find((element) => element._cyreg?.cy);
+        const node = container._cyreg.cy.getElementById(nodeId);
+        const position = node.renderedPosition();
+        const box = container.getBoundingClientRect();
+        return { x: box.left + position.x, y: box.top + position.y };
+    }, resourceId);
+}
+
+// Demo step A3: the core related-resources graph, opened from an arches-search
+// result through the demo's standalone related-resources plugin.
 export async function followRelationships(studio, director) {
-    const { page, pause, glideAndClick } = studio;
-    await director.goto(`${ARCHES_URL}/search?${ranchoVegaSearchQuery()}`, () =>
-        waitForSearchResults(page),
+    const { page, pause, glideTo, glideAndClick, typeInto } = studio;
+    await director.caption("");
+    await director.goto(`${ARCHES_URL}${SIMPLE_SEARCH_PATH}`, () =>
+        page.getByPlaceholder(/Find an item/).waitFor(),
     );
-    await glideAndClick(page.getByText("Related Resources").first());
+    await typeInto(page.getByPlaceholder(/Find an item/), "Rancho Vega", 60);
+    await page.keyboard.press("Enter");
+    const ranchoVegaRelated = page
+        .locator(".descriptor-section")
+        .filter({ has: page.getByRole("link", { name: "Rancho Vega", exact: true }) })
+        .locator("a.descriptor-section-related-action")
+        .first();
+    await ranchoVegaRelated.waitFor({ timeout: 30_000 });
+    await pause(1000);
+    await director.caption("Every result links to its relationship graph");
+    await glideTo(ranchoVegaRelated);
+    await pause(1500);
+    // The link opens a new tab, which the recording can't follow; load it here instead.
+    await director.goto(`${ARCHES_URL}${await ranchoVegaRelated.getAttribute("href")}`, () =>
+        pause(4500),
+    );
     await director.caption(
-        "Ten labelled relationships: designed by, developed by, housed workers of, identified by, built during, and five sources",
+        "Fifteen labelled relationships: designed by, developed by, housed workers of, identified by, built during, in the path of, and nine sources",
     );
     await pause(5000);
 
-    await director.caption("");
-    await director.goto(`${ARCHES_URL}/search?${williamsSearchQuery()}`, () =>
-        waitForSearchResults(page),
-    );
-    await glideAndClick(page.getByText("Related Resources").first());
+    await director.caption("Re-center the graph on the architect");
+    await glideAndClick(page.locator(".ion-asterisk").first());
+    await pause(800);
+    const williams = await graphNodeScreenPoint(page, WILLIAMS_RESOURCE_ID);
+    await page.mouse.move(williams.x, williams.y, { steps: 25 });
+    await pause(400);
+    await page.mouse.click(williams.x, williams.y);
+    await page.waitForURL(`**resourceid=${WILLIAMS_RESOURCE_ID}`, { timeout: 15_000 });
+    await pause(4000);
     await director.caption(
         "Follow the architect: 16 works here, 7 of them LA landmarks. The City's own layer has no architect field",
     );
@@ -128,10 +218,9 @@ async function signInAsReviewer(page) {
 // HCMs that also have a National Register tile slip through.
 export async function askWhatAFlatLayerCant(studio, director) {
     const { page, pause, glideTo, glideAndClick } = studio;
-    const advancedSearch = encodeURIComponent("/plugins/arches-search/advanced");
     await director.caption("");
-    await director.goto(`${ARCHES_URL}/auth/?next=${advancedSearch}`, async () => {
-        await signInAsReviewer(page);
+    // Signed out, like steps A1-A3.
+    await director.goto(`${ARCHES_URL}${ADVANCED_SEARCH_PATH}`, async () => {
         await page.getByText("Select Resource").waitFor();
         await pause(800);
     });
@@ -213,11 +302,12 @@ export async function askWhatAFlatLayerCant(studio, director) {
 
 export async function reviewInArches(studio, director) {
     const { page, pause, glideAndClick } = studio;
-    // Still signed in as the reviewer from step A4.
     await director.caption("Back in Arches, the reviewer opens the plant");
-    await director.goto(`${ARCHES_URL}/resource/${PLANT_RESOURCE_ID}`, () =>
-        page.waitForLoadState("networkidle"),
-    );
+    const plantEditorPath = `/resource/${PLANT_RESOURCE_ID}`;
+    await director.goto(`${ARCHES_URL}/auth/?next=${encodeURIComponent(plantEditorPath)}`, async () => {
+        await signInAsReviewer(page);
+        await page.waitForLoadState("networkidle");
+    });
     await pause(1500);
     // Geometry sits under the collapsed Location Data card.
     const tree = page.locator(".resource-editor-tree");
@@ -248,6 +338,5 @@ export async function reviewInArches(studio, director) {
         "A record can exist semantically before it exists spatially, and nobody bypassed governance",
     );
     await pause(3500);
-    await director.still("arches-provisional-edit");
     await pause(1500);
 }

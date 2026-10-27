@@ -26,17 +26,15 @@ export const DECK_DIRECTORY = path.resolve(
     path.dirname(fileURLToPath(import.meta.url)),
     "../..",
 );
-export const SCREENSHOT_DIRECTORY = path.join(DECK_DIRECTORY, "assets/screenshots");
 export const VIDEO_DIRECTORY = path.join(DECK_DIRECTORY, "assets/video");
 
 export const DEMO_PASSWORD = "foss4gna-demo-password";
 export const CONTRIBUTOR_USERNAME = "demo_contributor";
 export const REVIEWER_USERNAME = "demo_editor";
-export const PASSWORD_CLIENT_ID = "foss4gna-demo-geolibre";
 
 export const RANCHO_VEGA_RESOURCE_ID = "04c47869-64f3-5b50-8f7f-7b2641327812";
+export const WILLIAMS_RESOURCE_ID = "8ec6c939-0f1b-5bc0-aaa0-1b213c83e927";
 export const PLANT_RESOURCE_ID = "b54fe8e0-4754-500c-ac83-32f97df97650";
 export const PLANT_NAME = "Lockheed-Vega Aircraft Plant, Burbank";
-export const MONUMENT_GEOMETRY_NODE_ID = "87d3d7dc-f44f-11eb-bee9-a87eeabdefba";
 export const MONUMENT_LAYER_NAME = "Monument: Geospatial Coordinates";
 export const RANCHO_VEGA = { longitude: -118.3602, latitude: 34.1804 };

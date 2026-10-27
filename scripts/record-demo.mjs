@@ -2,20 +2,22 @@
 // corridor in Arches, Rancho Vega's relationships, the "Williams works that
 // aren't landmarks" query in arches-search, the Arches data in
 // GeoLibre, mapping the Lockheed-Vega plant (a record with no geometry), and
-// reviewing that edit back in Arches. Also saves stills for the deck's recap
-// slides. The plant's geometry is removed again afterwards.
+// reviewing that edit back in Arches. The deck plays it as the demo's backup,
+// with a poster frame. The demo project's reset_demo_state runs before and after.
 //
 //   node scripts/record-demo.mjs
 //
 //   ARCHES_URL           default http://localhost:8003
 //   ARCHES_GEOLIBRE_DIR  default ~/Projects/arches-geolibre (its demo harness
 //                        and GeoLibre web build are reused)
+//   DEMO_PROJECT_DIR     default ~/Projects/arches4/foss4gna-demo
+//   DEMO_PYTHON          default ~/Projects/arches4/foss4gna_demo_env/bin/python
 //
 // Needs the demo instance (notes/foss4gna/demo_project.md) and GeoLibre's web
 // build with the plugin (arches-geolibre docs/testing.md).
 
 import { execFileSync } from "node:child_process";
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 
 import {
@@ -25,22 +27,12 @@ import {
     reviewInArches,
     screenCorridor,
 } from "./demo/arches-segment.mjs";
-import {
-    ensurePlantHasNoGeometry,
-    plantGeometryFeatureCount,
-    recordGeometryWrites,
-    undoGeometryWrites,
-} from "./demo/cleanup.mjs";
-import {
-    PLANT_NAME,
-    SCREENSHOT_DIRECTORY,
-    VIDEO_DIRECTORY,
-    harness,
-} from "./demo/config.mjs";
+import { VIDEO_DIRECTORY, harness } from "./demo/config.mjs";
+import { resetDemoState } from "./demo/demo-state.mjs";
 import { mapTheUnmappedPlant, showArchesInGeoLibre } from "./demo/geolibre-segment.mjs";
 
 const VIDEO_NAME = "foss4gna-demo";
-const GEOLIBRE_CLIP_NAME = "foss4gna-demo-geolibre.mp4";
+const POSTER_SECONDS = 2.5;
 
 function titleCardHtml(heading, subheading) {
     return `<!doctype html><html><body style="margin:0;height:100vh;display:flex;flex-direction:column;
@@ -53,9 +45,9 @@ function titleCardHtml(heading, subheading) {
 }
 
 /**
- * Captions that survive page loads, and stills taken without them. Page
- * loads are recorded as cuts, so blank pages and half-loaded searches can be
- * removed from the video afterwards.
+ * Captions that survive page loads. Page loads are recorded as cuts, so
+ * blank pages and half-loaded searches can be removed from the video
+ * afterwards.
  */
 function createDirector(page, elapsedSeconds, cuts) {
     let currentCaption = "";
@@ -96,23 +88,7 @@ function createDirector(page, elapsedSeconds, cuts) {
             await page.setContent(titleCardHtml(heading, subheading));
             await page.waitForTimeout(milliseconds);
         },
-        async still(name) {
-            await showCaption("");
-            await page.waitForTimeout(400);
-            const file = path.join(SCREENSHOT_DIRECTORY, `${name}.png`);
-            await page.screenshot({ path: file });
-            console.log(`Saved ${file}`);
-            await showCaption(currentCaption);
-        },
     };
-}
-
-/** Seconds of `cuts` that fall before `seconds`. */
-function cutSecondsBefore(cuts, seconds) {
-    return cuts.reduce(
-        (total, [start, end]) => total + Math.max(0, Math.min(end, seconds) - start),
-        0,
-    );
 }
 
 /** Re-encodes `inputPath` without the cut ranges. */
@@ -128,24 +104,18 @@ function removeCuts(inputPath, outputPath, cuts) {
     ]);
 }
 
-await ensurePlantHasNoGeometry();
-await mkdir(SCREENSHOT_DIRECTORY, { recursive: true });
+resetDemoState();
 await mkdir(VIDEO_DIRECTORY, { recursive: true });
 const previewServer = await harness.ensurePreviewServer();
-let writes = [];
-// Seconds into the recording where each part starts, for cutting clips.
-const markers = {};
 // Page loads to remove from the recording, as [start, end] seconds.
 const cuts = [];
 try {
     const recordedPath = await harness.recordVideo(VIDEO_NAME, async (studio) => {
         const recordingStarted = Date.now();
         const elapsedSeconds = () => (Date.now() - recordingStarted) / 1000;
-        const mark = (name) => (markers[name] = elapsedSeconds());
         const director = createDirector(studio.page, elapsedSeconds, cuts);
-        writes = recordGeometryWrites(studio.page);
         await director.titleCard(
-            "Arches + GeoLibre, with real Los Angeles data",
+            "Arches + GIS, real LA data",
             "Screen a corridor, follow a resource's relationships, then map a record that has no geometry yet.",
             4500,
         );
@@ -154,7 +124,6 @@ try {
         await followRelationships(studio, director);
         await askWhatAFlatLayerCant(studio, director);
         await director.caption("");
-        mark("geolibreStart");
         await director.titleCard(
             "Part 2 · Bring it into your GIS",
             "GeoLibre with the Arches plugin (experimental): load the data, then map a record that has no geometry yet.",
@@ -163,7 +132,6 @@ try {
         await showArchesInGeoLibre(studio, director);
         await mapTheUnmappedPlant(studio, director);
         await reviewInArches(studio, director);
-        mark("outroStart");
         await director.caption("");
         await director.titleCard(
             "The relationships are the data",
@@ -174,27 +142,16 @@ try {
     const target = path.join(VIDEO_DIRECTORY, path.basename(recordedPath));
     removeCuts(recordedPath, target, cuts);
     await rm(recordedPath);
-    for (const name of Object.keys(markers)) {
-        markers[name] -= cutSecondsBefore(cuts, markers[name]);
-    }
     console.log(`Saved ${target} (${cuts.length} page loads cut)`);
 
-    // The hybrid demo plays only the GeoLibre part, so cut it out as its own clip.
-    const clipPath = path.join(VIDEO_DIRECTORY, GEOLIBRE_CLIP_NAME);
+    const posterPath = target.replace(/\.mp4$/, "-poster.png");
     execFileSync("ffmpeg", [
-        ...["-v", "error", "-y", "-ss", String(Math.max(0, markers.geolibreStart - 0.2))],
-        ...["-to", String(markers.outroStart + 0.5), "-i", target],
-        ...["-c:v", "libx264", "-preset", "slow", "-crf", "22", "-pix_fmt", "yuv420p"],
-        ...["-movflags", "+faststart", clipPath],
+        ...["-v", "error", "-y", "-ss", String(POSTER_SECONDS), "-i", target],
+        ...["-frames:v", "1", posterPath],
     ]);
-    await writeFile(
-        path.join(VIDEO_DIRECTORY, "foss4gna-demo-markers.json"),
-        JSON.stringify(markers, null, 2),
-    );
-    console.log(`Saved ${clipPath} (${markers.geolibreStart.toFixed(1)}s to ${markers.outroStart.toFixed(1)}s)`);
+    console.log(`Saved ${posterPath}`);
 } finally {
-    await undoGeometryWrites(writes);
-    console.log(`${PLANT_NAME} now has ${await plantGeometryFeatureCount()} geometry feature(s).`);
+    resetDemoState();
     if (previewServer) {
         process.kill(-previewServer.pid);
     }

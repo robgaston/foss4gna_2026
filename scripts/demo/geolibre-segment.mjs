@@ -78,11 +78,10 @@ export async function showArchesInGeoLibre(studio, director) {
     await studio.layerRow(MONUMENT_LAYER_NAME).waitFor({ timeout: 120_000 });
     await pause(1500);
 
-    await director.caption("Rancho Vega: the same 27 footprints, with the same permissions");
+    await director.caption("Rancho Vega: the same 21 buildings, with the same permissions");
     await searchPlace(studio, `${RANCHO_VEGA.latitude}, ${RANCHO_VEGA.longitude}`);
     await zoomTowards(studio, RANCHO_VEGA, 5);
     await pause(1500);
-    await director.still("geolibre-rancho-vega");
     await pause(2000);
 }
 
@@ -100,7 +99,6 @@ export async function mapTheUnmappedPlant(studio, director) {
     await pause(2500);
     await glideAndClick(section.getByRole("button", { name: `Add ${PLANT_NAME} to the worklist` }));
     await pause(1200);
-    await director.still("geolibre-worklist");
 
     await director.caption("Find the plant's site near the Burbank airport");
     // The place search lands at about zoom 16. Zooming further in leaves the
@@ -121,7 +119,6 @@ export async function mapTheUnmappedPlant(studio, director) {
     await director.caption("What you draw goes to the record you're working on");
     await glideTo(attachedToPlant);
     await pause(2000);
-    await director.still("geolibre-resource-first");
 
     await director.caption("Push it to Arches. A contributor's edit is saved as provisional");
     await glideAndClick(worklistChanges.getByRole("button", { name: "Push to Arches" }));
@@ -131,7 +128,6 @@ export async function mapTheUnmappedPlant(studio, director) {
         throw new Error(`Push failed: ${await pushResult.innerText()}`);
     }
     await pause(1500);
-    await director.still("geolibre-pushed");
     await director.caption("It stays off the map until a reviewer approves it");
     await pause(4000);
 }

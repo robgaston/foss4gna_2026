@@ -1,59 +1,13 @@
-// Arches search URL filters shared by the demo recording and the recap
-// screenshots, so both show the same searches.
+// Search settings for the demo recording and screenshots. Nothing in the demo uses core search: searching
+// is arches-search, and the relationship graphs are on a standalone page.
 
 export const PERSON_GRAPH_ID = "22477f01-1a44-11e9-b0a9-000d3ab1e588";
 
-// A strip about 180 m wide along Oxnard Street, standing in for a proposed
-// utility corridor. Rancho Vega is the only inventoried resource it touches.
-export const CORRIDOR = {
-    type: "FeatureCollection",
-    features: [
-        {
-            type: "Feature",
-            properties: { buffer: { width: 0, unit: "m" }, inverted: false },
-            geometry: {
-                type: "Polygon",
-                coordinates: [
-                    [
-                        [-118.395, 34.1787],
-                        [-118.335, 34.1787],
-                        [-118.335, 34.1803],
-                        [-118.395, 34.1803],
-                        [-118.395, 34.1787],
-                    ],
-                ],
-            },
-        },
-    ],
-};
-
-export const termFilter = (term) =>
-    JSON.stringify([
-        {
-            type: "string",
-            context: "",
-            context_label: "",
-            id: term,
-            text: term,
-            value: term,
-            inverted: false,
-        },
-    ]);
-
-// Only the Person record, so the map doesn't fly to "Paul Revere Williams
-// House", a monument that isn't linked to him.
-export const personFilter = JSON.stringify([
-    { graphid: PERSON_GRAPH_ID, name: "Person", inverted: false },
-]);
-
-export const corridorSearchQuery = () =>
-    new URLSearchParams({ "map-filter": JSON.stringify(CORRIDOR) });
-
-export const ranchoVegaSearchQuery = () =>
-    new URLSearchParams({ "term-filter": termFilter("Rancho Vega") });
-
-export const williamsSearchQuery = () =>
-    new URLSearchParams({
-        "term-filter": termFilter("Paul Revere Williams"),
-        "resource-type-filter": personFilter,
-    });
+// Demo step A1 in arches-search's simple search: a proposed utility corridor
+// along Oxnard Street, drawn as a line and buffered. Rancho Vega is the only
+// inventoried resource it touches.
+export const SIMPLE_SEARCH_PATH = "/plugins/arches-search/simple";
+export const ADVANCED_SEARCH_PATH = "/plugins/arches-search/advanced";
+export const CORRIDOR_VIEW = { center: [-118.3605, 34.1805], zoom: 14.3 };
+export const OXNARD_STREET_LATITUDE = 34.1793;
+export const CORRIDOR_BUFFER_METERS = 100;

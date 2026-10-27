@@ -1,9 +1,11 @@
 """QGIS startup script: shows the demo's QGIS view and saves a screenshot.
 
 Loads foss4gna_monument_footprints (a PostGIS view over the Arches demo
-database) over an OpenStreetMap basemap, zooms to Rancho Vega, docks the
-attribute table filtered to Paul R. Williams's works, grabs the QGIS window
-and quits. Run it with scripts/qgis/capture-qgis-screenshot.sh.
+database) over an OpenStreetMap basemap, signs the Arches QGIS plugin in to
+the demo as a contributor, zooms to Rancho Vega and registers it in the
+plugin as the resource to edit, docks the plugin and the attribute table
+(filtered to Paul R. Williams's works), grabs the QGIS window and quits. Run
+it with scripts/qgis/capture-qgis-screenshot.sh.
 """
 
 import os
@@ -22,12 +24,15 @@ from qgis.core import (
 )
 from qgis.PyQt.QtCore import Qt, QTimer
 from qgis.PyQt.QtWidgets import QApplication, QDialog, QDockWidget, QTableView
-from qgis.utils import iface
+from qgis.utils import available_plugins, iface, loadPlugin, plugins, startPlugin
 
 OUTPUT_PATH = os.environ["QGIS_SCREENSHOT_PATH"]
 LOG_PATH = os.environ.get("QGIS_SCREENSHOT_LOG", OUTPUT_PATH + ".log")
-DRAW_DELAY_MILLISECONDS = int(os.environ.get("QGIS_SCREENSHOT_DELAY_MS", "12000"))
-WINDOW_WIDTH, WINDOW_HEIGHT = 1600, 900
+DRAW_DELAY_MILLISECONDS = int(os.environ.get("QGIS_SCREENSHOT_DELAY_MS", "16000"))
+ARCHES_URL = os.environ["ARCHES_URL"]
+CONTRIBUTOR_USERNAME = "demo_contributor"
+DEMO_PASSWORD = "foss4gna-demo-password"
+WINDOW_WIDTH, WINDOW_HEIGHT = 1920, 1080
 # Centred on Rancho Vega (Web Mercator), sized for the map area left above
 # the docked attribute table.
 RANCHO_VEGA_CENTER_X, RANCHO_VEGA_CENTER_Y = -13175797, 4053078
@@ -42,6 +47,18 @@ RANCHO_VEGA_EXTENT = QgsRectangle(
 def log(message):
     with open(LOG_PATH, "a") as log_file:
         log_file.write(message + "\n")
+
+
+def logging_errors(step):
+    """Runs a timed step, logging any error (QTimer would swallow it)."""
+
+    def run():
+        try:
+            step()
+        except Exception:
+            log(traceback.format_exc())
+
+    return run
 
 
 def add_layers(project):
@@ -80,9 +97,10 @@ def add_layers(project):
     table_config = monuments.attributeTableConfig()
     columns = table_config.columns()
     for column in columns:
-        column.hidden = column.name in ("gid", "resourceinstanceid")
+        column.hidden = column.name in ("gid", "resourceinstanceid", "tileid", "nodeid")
     table_config.setColumns(columns)
     table_config.setSortExpression('"built"')
+    table_config.setActionWidgetVisible(False)
     monuments.setAttributeTableConfig(table_config)
     project.addMapLayer(monuments)
     return monuments
@@ -96,10 +114,45 @@ def prepare_window():
     return window
 
 
+def sign_in_to_arches():
+    """Opens the Arches plugin and signs in; the connection runs as a task."""
+    if "arches_project" not in plugins:
+        loaded = loadPlugin("arches_project") and startPlugin("arches_project")
+        log(f"plugin loaded={loaded}; available={'arches_project' in available_plugins}")
+    arches_plugin = plugins["arches_project"]
+    arches_plugin.run()
+    plugin_dialog = arches_plugin.dlg
+    plugin_dialog.archesServerInput.setText(ARCHES_URL)
+    plugin_dialog.usernameInput.setText(CONTRIBUTOR_USERNAME)
+    plugin_dialog.passwordInput.setText(DEMO_PASSWORD)
+    plugin_dialog.btnConnect.click()
+    log("plugin sign-in started")
+
+
+def register_rancho_vega(monuments):
+    """Registers the selected Rancho Vega as the plugin's resource to edit,
+    then docks the plugin beside the map so one grab shows it."""
+    plugin_dialog = plugins["arches_project"].dlg
+    plugin_dialog.tabWidget.setCurrentWidget(plugin_dialog.editResource)
+    plugin_dialog.editResSelectResButton.click()
+    # Registering clears the selection; select it again for the map.
+    monuments.selectByExpression("\"name\" = 'Rancho Vega'")
+    plugin_dialog.setWindowFlags(Qt.WindowType.Widget)
+    dock = QDockWidget("Arches Project plugin", iface.mainWindow())
+    dock.setWidget(plugin_dialog)
+    iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
+    iface.mainWindow().resizeDocks([dock], [560], Qt.Orientation.Horizontal)
+    plugin_dialog.show()
+    iface.mapCanvas().setExtent(RANCHO_VEGA_EXTENT)
+    iface.mapCanvas().refresh()
+    log(f"registered: {plugin_dialog.editResSelectedResLabel.text()}")
+
+
 def frame_rancho_vega(monuments):
     """Runs once the layers have loaded, so QGIS doesn't zoom back out."""
     for dock in iface.mainWindow().findChildren(QDockWidget):
-        if dock.objectName() == "Browser":
+        # The layer panel makes room for the attribute table's columns.
+        if dock.objectName() in ("Browser", "Layers"):
             dock.hide()
     iface.messageBar().clearWidgets()
     iface.mapCanvas().setExtent(RANCHO_VEGA_EXTENT)
@@ -118,9 +171,10 @@ def open_attribute_table(monuments):
     iface.showAttributeTable(monuments, "\"architect\" IS NOT NULL")
     table_dialogs = [
         widget
-        for widget in QApplication.topLevelWidgets()
-        if isinstance(widget, QDialog) and widget.isVisible()
+        for widget in QApplication.allWidgets()
+        if widget.metaObject().className() == "QgsAttributeTableDialog"
     ]
+    log(f"attribute table parents: {[type(dialog.parent()).__name__ for dialog in table_dialogs]}")
     if not table_dialogs:
         log("no attribute table window found")
         return
@@ -154,8 +208,10 @@ try:
     window = prepare_window()
     monuments = add_layers(project)
     log("layers added; waiting for them to load")
-    QTimer.singleShot(3000, lambda: frame_rancho_vega(monuments))
-    QTimer.singleShot(5000, lambda: open_attribute_table(monuments))
+    QTimer.singleShot(1000, logging_errors(sign_in_to_arches))
+    QTimer.singleShot(8000, logging_errors(lambda: frame_rancho_vega(monuments)))
+    QTimer.singleShot(9000, logging_errors(lambda: open_attribute_table(monuments)))
+    QTimer.singleShot(11000, logging_errors(lambda: register_rancho_vega(monuments)))
     QTimer.singleShot(
         DRAW_DELAY_MILLISECONDS,
         lambda: save_screenshot_and_quit(project, window, monuments),

@@ -125,7 +125,7 @@
                             <text x="910" y="396" text-anchor="middle" fill="#fff" font-size="14">City + Getty survey</text>
                         </g>
                     </svg>
-                    <p class="closing-line fragment" data-fragment-index="4"><strong>None of that is an attribute of the geometry. All of it is a relationship.</strong></p>
+                    <p class="closing-line fragment" data-fragment-index="4"><strong>None of those are attributes of the geometry. They are all relationships.</strong></p>
                     <aside class="notes">
                         <p>⏱ 1:00 to 2:00</p>
                         <ul>
@@ -159,8 +159,8 @@
                             </ul>
                         </div>
                         <div class="stack">
-                            <div class="card compact"><h3>AGPL-3.0, on your stack</h3><p>PostgreSQL/PostGIS, Django, Elasticsearch</p></div>
-                            <div class="card compact"><h3>CIDOC CRM</h3><p>The ontology behind every graph (ISO 21127)</p></div>
+                            <div class="card compact"><h3>AGPL-3.0, OSS stack</h3><p>PostgreSQL/PostGIS, Django, Elasticsearch</p></div>
+                            <div class="card compact"><h3>Ontology-backed</h3><p>Each graph can be based on known ontologies such as CIDOC CRM (ISO 21127)</p></div>
                             <div class="card compact"><h3>Vocabularies, linked data</h3><p>SKOS thesauri; JSON-LD export</p></div>
                         </div>
                     </div>
@@ -268,11 +268,11 @@
                             <li><strong>PostGIS:</strong> geometry lives with the rest of your data</li>
                             <li><strong>Spatial views:</strong> open in QGIS; publish with GeoServer or pg_featureserv</li>
                             <li><strong>APIs:</strong> GeoJSON, vector tiles</li>
-                            <li><strong>GeoLibre plugin</strong> <span class="muted">(experimental, Arches 8.2)</span>: live editing in the browser</li>
+                            <li><strong>GIS plugins</strong> for QGIS, ArcGIS Pro, and now GeoLibre <span class="muted">(experimental, Arches 8.2)</span> support editing geometries directly in your GIS</li>
                         </ul>
                         <figure style="margin: 0">
-                            <img class="screenshot" src="assets/screenshots/qgis-spatial-view-cropped.png" alt="QGIS 4.2 showing Rancho Vega's footprints from a PostGIS view of the Arches data, with an attribute table listing Paul R. Williams's works and their designations" />
-                            <figcaption class="caption">QGIS 4.2 reading a PostGIS view of the demo data. The architect column comes from Arches relationships. Of his works with footprints here, only Rancho Vega isn't a designated landmark.</figcaption>
+                            <img class="screenshot" src="assets/screenshots/qgis-spatial-view-cropped.png" alt="QGIS 3.44 showing Rancho Vega's footprints from a PostGIS view of the Arches data, an attribute table listing Paul R. Williams's works and their designations, and the Arches QGIS plugin with Rancho Vega registered for editing" />
+                            <figcaption class="caption">QGIS 3.44 reading a PostGIS view of the demo data, with the Arches QGIS plugin signed in and Rancho Vega registered for editing. The architect column comes from Arches relationships. Of his works with footprints here, only Rancho Vega isn't a designated landmark.</figcaption>
                         </figure>
                     </div>
                     <aside class="notes">
@@ -280,7 +280,8 @@
                         <ul>
                             <li><em>"Features are fast, familiar and powerful. Keep them. Arches stores geometry in PostGIS; the question is where the context lives."</em></li>
                             <li>Point at the QGIS table: an ordinary PostGIS view, but the architect column is a relationship, not a field anyone typed in.</li>
-                            <li>OGC: Arches doesn't serve OGC APIs itself. Its spatial views are plain PostGIS, so GeoServer or pg_featureserv can publish them. A native OGC API Features endpoint is a good contribution (slide 12).</li>
+                            <li>On the right, the Arches QGIS plugin (archesproject/arches-qgis, for QGIS 3): signed in to the demo as a contributor, with Rancho Vega registered as the resource to edit. Add or replace its geometry from any QGIS feature; the edit goes through the Arches API, with Arches permissions.</li>
+                            <li>OGC: Arches doesn't serve OGC APIs itself. Its spatial views are plain PostGIS, so GeoServer or pg_featureserv can publish them. A native OGC API Features endpoint is a good contribution (slide 11).</li>
                             <li>The table only holds works with polygons. Two more undesignated LA works (UCLA La Kretz, Hahn Hall) are points; they show up in the demo query.</li>
                             <li>Be candid: the GeoLibre plugin is experimental and depends on Arches 8.2, which hasn't been released yet.</li>
                             <li>Transition: <em>"Let me show you what this looks like with real Los Angeles data."</em></li>
@@ -290,188 +291,52 @@
 
                 <!-- ============================================================
                      3. DEMO (4:15 to 13:00)
-                     Part 1 (Arches) is live. Vertical stack under the title
-                     card: the full recorded demo, then captioned screenshots.
-                     Part 2 (GeoLibre) is the next horizontal slide.
+                     All four steps are live. Under the title card: the full
+                     recorded demo, as a backup.
                      ============================================================ -->
 
                 <section>
                     <section class="dark" data-background-color="#1f2326">
                         <p class="eyebrow">02 · Demo</p>
-                        <h2>Arches + GeoLibre, real LA data</h2>
+                        <h2>Arches + GIS, real LA data</h2>
                         <ol class="demo-steps">
-                            <li><strong>Screen an area:</strong> what's here, and why does it matter?</li>
+                            <li><strong>Screen a corridor:</strong> what's here, and why does it matter?</li>
                             <li><strong>Follow the relationships:</strong> from a parcel to an architect to a city-wide network</li>
                             <li><strong>Ask what a flat layer can't:</strong> which of his works aren't landmarks?</li>
                             <li><strong>Bring it into your GIS:</strong> GeoLibre, in both directions</li>
                         </ol>
                         <p class="small muted" style="margin-top: 1.2em">1,343 LA Historic-Cultural Monuments (City Planning) · Wikidata · LA County Assessor · OpenStreetMap</p>
                         <aside class="notes">
-                            <p>⏱ 4:15. Switch to the browser for steps 1 to 3, live, about 5 minutes. Script: notes/foss4gna/demo_script.md.</p>
+                            <p>⏱ 4:15. Switch to the browser for all four steps, live: Arches for steps 1 to 3 (about 5 minutes), then GeoLibre for step 4. Script: notes/foss4gna/demo_script.md.</p>
+                            <p>Searching is arches-search (Arches' new search app): the corridor in step 1 and the query in step 3. In step 2, a result's "Related" link opens Arches' relationship graph on a page of its own (a small plugin in the demo project), since arches-search doesn't have a graph yet. The old search page doesn't appear at all.</p>
                             <ul>
-                                <li>Then come back and press RIGHT for step 4: the recorded GeoLibre segment.</li>
-                                <li>If the live part fails: press DOWN for the full recorded demo (captioned), or DOWN twice for captioned screenshots. Don't troubleshoot on stage.</li>
+                                <li>After step 4, come back and press RIGHT for "Legible, expressive data and relationships".</li>
+                                <li>If the live demo fails: press DOWN for the full recorded demo (captioned). Don't troubleshoot on stage.</li>
                             </ul>
                         </aside>
                     </section>
                     <section>
-                        <p class="eyebrow">Demo backup · The whole demo, recorded (2:50)</p>
+                        <p class="eyebrow">Demo backup · The whole demo, recorded (3:14)</p>
                         <video class="screenshot-full" data-src="assets/video/foss4gna-demo.mp4" poster="assets/video/foss4gna-demo-poster.png" controls muted playsinline></video>
                         <aside class="notes">
-                            <p>The full demo as one captioned video: corridor search, Rancho Vega's record and labelled relationships, Williams's works, the "not landmarks" query in arches-search, Arches in GeoLibre, mapping the Lockheed-Vega plant, and the review in Arches.</p>
+                            <p>The full demo as one captioned video: the corridor search in arches-search, Rancho Vega's record and labelled relationships, Williams's works, the "not landmarks" query in arches-search, Arches in GeoLibre, mapping the Lockheed-Vega plant, and the review in Arches.</p>
                             <ul>
                                 <li>Press play (it doesn't autoplay) and narrate over the captions. Press F on the video for full screen.</li>
                                 <li>Recorded with scripts/record-demo.mjs.</li>
-                                <li>The captioned screenshots continue below (↓).</li>
+                                <li>Press RIGHT to rejoin the main deck.</li>
                             </ul>
                         </aside>
                     </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/search-rancho-vega.png" alt="Arches search with a corridor map filter over North Hollywood, returning Rancho Vega" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 1/10</p>
-                                <h3>Screen an area</h3>
-                                <p>A map filter over a hypothetical utility corridor in North Hollywood returns one inventoried resource: Rancho Vega, which isn't a designated landmark.</p>
-                                <p class="so-what">So far, any GIS can do this.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/report-rancho-vega-top.png" alt="The Rancho Vega report: a header map of 27 building footprints and its names" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 2/10</p>
-                                <h3>An unremarkable record</h3>
-                                <p>On its own, Rancho Vega looks ordinary: 27 building footprints, garden apartments, built in 1945, not a designated landmark.</p>
-                                <p class="so-what">Its geometry is one value among many.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot crop-left" src="assets/screenshots/report-rancho-vega-actors.png" alt="The Rancho Vega report's associated people and organizations: Paul Revere Williams as Architect and Rancho Vega Housing Corporation as Developer" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 3/10</p>
-                                <h3>…and who it's connected to</h3>
-                                <p>Paul R. Williams as Architect. The Rancho Vega Housing Corporation as Developer. Associated with the Lockheed-Vega plant. Cross-referenced to the county assessor's parcel.</p>
-                                <p class="so-what">Each of these is a typed relationship, not a text field.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/related-rancho-vega.png" alt="Arches related-resources graph centered on Rancho Vega, with labelled links to ten records" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 4/10</p>
-                                <h3>Rancho Vega's relationships</h3>
-                                <p>Ten labelled links: designed by Williams, housed workers of the Lockheed-Vega plant, identified by SurveyLA, built during the war, and five sources, among them HistoricPlacesLA.</p>
-                                <p class="so-what">This network is what makes Rancho Vega significant.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/related-paul-r-williams.png" alt="Arches related-resources graph centered on Paul Revere Williams, linking his works" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 5/10</p>
-                                <h3>Follow the architect</h3>
-                                <p>Williams links to 16 works in this dataset, seven of them LA Historic-Cultural Monuments. The City's own monument layer has no architect field to show that.</p>
-                                <p class="so-what">The network runs through the architect, not the parcel.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/search-williams-undesignated.png" alt="Arches search for Monuments designed by Paul R. Williams that have no Historic-Cultural Monument designation, listing Rancho Vega among the results" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · A · Arches · 6/10</p>
-                                <h3>Ask what a flat layer can't</h3>
-                                <p>Which of Williams's works aren't LA landmarks? One query: Monuments whose actor is Williams and with no Historic-Cultural Monument designation. Nine works; one of them is in the corridor.</p>
-                                <p class="so-what">"Designed by" is a relationship you can query, not a string to parse.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/geolibre-rancho-vega.png" alt="GeoLibre Web with the Arches plugin, showing Rancho Vega's footprints from the Arches Monument layer" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · B · GeoLibre · 7/10</p>
-                                <h3>Arches data in GeoLibre</h3>
-                                <p>GeoLibre, an open-source GIS that runs entirely in the browser, loads the Arches Monument layer through the plugin. Same footprints, same permissions.</p>
-                                <p class="so-what">The relationships stay in Arches; the GIS still gets the geometry.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/geolibre-worklist.png" alt="The plugin's worklist finding the Lockheed-Vega plant, the one Monument with no geometry" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · B · GeoLibre · 8/10</p>
-                                <h3>A record with no geometry</h3>
-                                <p>The plugin asks Arches for records with no geometry and finds one: the Lockheed-Vega plant, known only from documentary sources.</p>
-                                <p class="so-what">No spatial view, and no map, can show a record that has no geometry yet.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/geolibre-pushed.png" alt="A rough footprint drawn for the plant near the Burbank airport, pushed to Arches and awaiting review" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · B · GeoLibre · 9/10</p>
-                                <h3>Resource-first editing</h3>
-                                <p>A contributor draws a rough footprint near the Burbank airport and pushes it to Arches. Because they aren't a reviewer, it's saved as a provisional edit.</p>
-                                <p class="so-what">The record existed semantically before it existed spatially.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                    <section>
-                        <div class="recap">
-                            <img class="screenshot" src="assets/screenshots/arches-provisional-edit.png" alt="Arches resource editor for the Lockheed-Vega plant, showing the contributor's provisional footprint on the map, pending review" />
-                            <div class="recap-caption">
-                                <p class="eyebrow">Demo recap · B · GeoLibre · 10/10</p>
-                                <h3>Back in Arches, for review</h3>
-                                <p>A reviewer opens the plant in Arches, picks the contributor's provisional edit, and sees the proposed footprint on the map before approving it.</p>
-                                <p class="so-what">Context was added without bypassing governance.</p>
-                            </div>
-                        </div>
-                        <aside class="notes"><p>Optional recap. Narrate the caption, then the last line. Press RIGHT at any point to rejoin the main deck.</p></aside>
-                    </section>
-                </section>
-
-                <!-- Slide 8: Demo part 2, GeoLibre (recorded) -->
-                <section>
-                    <p class="eyebrow">02 · Demo · Bring it into your GIS (recorded)</p>
-                    <video class="screenshot-full demo-video" data-src="assets/video/foss4gna-demo-geolibre.mp4" poster="assets/video/foss4gna-demo-geolibre-poster.png" controls muted playsinline></video>
-                    <aside class="notes">
-                        <p>⏱ about 11:15 to 13:00. Press play (no autoplay) and narrate over it. If the room is large, use the video's own full-screen button; Esc returns to the deck.</p>
-                        <ul>
-                            <li><em>"This is GeoLibre: open source, and it runs entirely in the browser. The Arches plugin is experimental, so I recorded this part."</em></li>
-                            <li>Signed in as a contributor, not a reviewer. Same data, same permissions as Arches.</li>
-                            <li>The worklist finds the one record with no geometry: the Lockheed-Vega plant. <em>"No spatial view can show it."</em></li>
-                            <li>A rough footprint near the Burbank airport, pushed back as a provisional edit.</li>
-                            <li>The reviewer sees it waiting in Arches: <em>"a record can exist semantically before it exists spatially, and nobody bypassed governance."</em></li>
-                        </ul>
-                    </aside>
                 </section>
 
                 <!-- ============================================================
                      4. PAYOFF (13:00 to 15:00)
                      ============================================================ -->
 
-                <!-- Slide 9: Legible, not just fast -->
+                <!-- Slide 8: Legible, expressive data and relationships -->
                 <section>
                     <p class="eyebrow">03 · The payoff</p>
-                    <h2>Legible, not just fast</h2>
+                    <h2>Legible, expressive data and relationships</h2>
                     <div class="columns wide-right">
                         <div class="stack">
                             <div>
@@ -517,13 +382,13 @@
                     </aside>
                 </section>
 
-                <!-- Slide 10: Better decisions -->
+                <!-- Slide 9: Better decisions -->
                 <section class="dark" data-background-color="#1f2326">
                     <div style="display: flex; flex-direction: column; justify-content: center; height: 100%">
                         <p class="eyebrow">03 · The payoff</p>
                         <h2 style="max-width: 18em">The parcel layer said "five or more apartments, 1945."</h2>
                         <h2 class="fragment" style="max-width: 18em"><span class="accent">The graph showed significance before the bulldozer arrived.</span></h2>
-                        <p class="lede fragment">Integrated spatial and semantic data means fewer surprises, faster review, and decisions you can defend.</p>
+                        <p class="lede fragment">Integrated spatial and semantic data means fewer surprises, faster review, and better decisions.</p>
                     </div>
                     <aside class="notes">
                         <p>⏱ 14:15 to 15:00</p>
@@ -538,7 +403,7 @@
                      5. BEYOND HERITAGE + GET INVOLVED (15:00 to 17:30)
                      ============================================================ -->
 
-                <!-- Slide 11: Beyond heritage -->
+                <!-- Slide 10: Beyond heritage -->
                 <section>
                     <p class="eyebrow">04 · Beyond heritage</p>
                     <h2>Not just heritage</h2>
@@ -566,14 +431,15 @@
                     </aside>
                 </section>
 
-                <!-- Slide 12: Come build with us -->
+                <!-- Slide 11: Come build with us -->
                 <section>
                     <p class="eyebrow">Open source</p>
                     <h2>Come build with us</h2>
                     <ul class="small">
                         <li><strong>Arches</strong> (AGPL-3.0): <a href="https://github.com/archesproject/arches">github.com/archesproject/arches</a> · docs, forum and implementations at <a href="https://www.archesproject.org/">archesproject.org</a></li>
+                        <li><strong>QGIS plugin</strong>: <a href="https://github.com/archesproject/arches-qgis">github.com/archesproject/arches-qgis</a></li>
                         <li><strong>GeoLibre plugin</strong> <span class="muted">(experimental, needs Arches 8.2, upcoming)</span>: <a href="https://github.com/fargeo/arches-geolibre">github.com/fargeo/arches-geolibre</a></li>
-                        <li><strong>Good first contributions:</strong> OGC API Features, QGIS tooling, the GeoLibre plugin, shared vocabularies</li>
+                        <li><strong>Good first contributions:</strong> OGC API Features, QGIS/GeoLibre plugin</li>
                     </ul>
                     <div class="columns three qr-row">
                         <div class="qr"><img src="assets/qr/qr-slides.svg" alt="QR code for rgaston.com/foss4gna_2026" />Slides: rgaston.com/foss4gna_2026</div>
@@ -590,7 +456,7 @@
                     </aside>
                 </section>
 
-                <!-- Slide 13: Questions -->
+                <!-- Slide 12: Questions -->
                 <section class="dark title-slide" data-background-color="#1f2326">
                     <p class="eyebrow">Thank you</p>
                     <h1>Questions?</h1>
