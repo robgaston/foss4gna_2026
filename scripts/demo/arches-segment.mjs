@@ -161,9 +161,9 @@ export async function followRelationships(studio, director) {
     const { page, pause, glideTo, glideAndClick, typeInto } = studio;
     await director.caption("");
     await director.goto(`${ARCHES_URL}${SIMPLE_SEARCH_PATH}`, () =>
-        page.getByPlaceholder(/Find an item/).waitFor(),
+        page.getByPlaceholder(/Search places, people/).waitFor(),
     );
-    await typeInto(page.getByPlaceholder(/Find an item/), "Rancho Vega", 60);
+    await typeInto(page.getByPlaceholder(/Search places, people/), "Rancho Vega", 60);
     await page.keyboard.press("Enter");
     const ranchoVegaRelated = page
         .locator(".descriptor-section")
@@ -298,6 +298,24 @@ export async function askWhatAFlatLayerCant(studio, director) {
     await pause(2500);
     await glideTo(page.getByText("Rancho Vega", { exact: true }).first());
     await pause(3000);
+
+    // The same question in SQL this room already knows: "no designation is
+    // an HCM" compiles to NOT EXISTS over the whole resource.
+    await glideAndClick(page.getByRole("button", { name: "Describe Query" }));
+    const sqlText = page.getByRole("tabpanel", { name: "SQL" }).getByRole("textbox");
+    await sqlText.waitFor({ timeout: 30_000 });
+    await director.caption("Under the hood: \"no designation is an HCM\" is a NOT EXISTS in SQL");
+    await sqlText.evaluate((textarea) => {
+        const start = textarea.value.search(/not exists/i);
+        const lineNumber = textarea.value.slice(0, start).split("\n").length;
+        const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight) || 18;
+        textarea.scrollTop = Math.max(0, (lineNumber - 6) * lineHeight);
+        textarea.focus();
+        textarea.setSelectionRange(start, start + "NOT EXISTS".length);
+    });
+    await pause(5000);
+    await page.keyboard.press("Escape");
+    await pause(800);
 }
 
 export async function reviewInArches(studio, director) {

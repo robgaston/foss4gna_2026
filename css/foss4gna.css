@@ -30,6 +30,7 @@
     --arches-red: #c4151a;
     --arches-red-dark: #a71c20;
     --arches-red-tint: #f8e3e3;
+    --arches-red-on-dark: #f26b6f;
     --ink: #1f2326;
     --ink-soft: #4a4f55;
     --ink-muted: #7a7f85;
@@ -170,6 +171,7 @@
 .reveal .columns.three { grid-template-columns: repeat(3, 1fr); }
 .reveal .columns.four { grid-template-columns: repeat(4, 1fr); }
 .reveal .columns.centered { align-items: center; }
+.reveal .columns.model-graphs { grid-template-columns: 1.7fr 1fr; }
 
 .reveal .stack > * + * {
     margin-top: 0.7em;
@@ -295,6 +297,19 @@
 .reveal pre.code .term { color: #f2a7a9; }
 .reveal pre.code .literal { color: #e8c48f; }
 .reveal pre.code .dim { color: #8a8f95; }
+
+/* Larger, with everything dimmed except the highlighted lines. */
+.reveal pre.code.focus {
+    font-size: 0.6em;
+    color: #7d8288;
+}
+
+.reveal pre.code.focus .hl {
+    background: rgba(242, 167, 169, 0.14);
+    border-radius: 0.2em;
+    padding: 0 0.15em;
+    font-weight: 700;
+}
 
 /* ---------- Media ---------- */
 
@@ -427,6 +442,13 @@
     color: #c9c6c1;
 }
 
+/* Arches red is too dark on charcoal, especially once a projector washes it
+   out, so dark slides use a lighter tint. */
+.reveal section.dark p.eyebrow,
+.reveal section.dark .accent {
+    color: var(--arches-red-on-dark);
+}
+
 .reveal .title-slide {
     display: flex !important;
     flex-direction: column;
@@ -529,13 +551,24 @@
 
 .reveal .gis-layout {
     display: grid;
-    grid-template-columns: 1fr 2.1fr;
+    /* The screenshot holds the map, table and plugin panel, so it gets most
+       of the width. */
+    grid-template-columns: 1fr 2.6fr;
     gap: 1em;
     align-items: start;
 }
 
 .reveal .gis-list li {
     margin-bottom: 0.6em;
+}
+
+/* Tall enough for the attribute table to read when projected, short enough
+   to leave room for the caption. */
+.reveal .gis-layout .screenshot {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 13.4em;
 }
 
 /* ---------- Takeaway line ---------- */

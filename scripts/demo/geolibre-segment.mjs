@@ -64,9 +64,12 @@ async function zoomTowards(studio, coordinate, steps) {
 }
 
 export async function showArchesInGeoLibre(studio, director) {
-    const { panel, pause, glideAndClick } = studio;
+    const { page, panel, pause, glideAndClick } = studio;
     // The globe's imagery takes a few seconds to arrive; cut that wait.
     await director.goto(harness.GEOLIBRE_URL, () => pause(3500));
+    // The status bar's Diagnostics count turns red during the demo, which
+    // reads as a failure in the video; hide it.
+    await page.addStyleTag({ content: "footer button:has(.lucide-bug) { visibility: hidden; }" });
     await director.caption("GeoLibre: an open-source GIS that runs entirely in the browser");
     await pause(1500);
     await signInToPlugin(studio, director);
@@ -78,11 +81,12 @@ export async function showArchesInGeoLibre(studio, director) {
     await studio.layerRow(MONUMENT_LAYER_NAME).waitFor({ timeout: 120_000 });
     await pause(1500);
 
-    await director.caption("Rancho Vega: the same footprints, with the same permissions");
+    await director.caption("Find Rancho Vega");
     await searchPlace(studio, `${RANCHO_VEGA.latitude}, ${RANCHO_VEGA.longitude}`);
     await zoomTowards(studio, RANCHO_VEGA, 5);
-    await pause(1500);
-    await pause(2000);
+    // Only once the footprints are on screen.
+    await director.caption("Rancho Vega: the same footprints, with the same permissions");
+    await pause(3500);
 }
 
 export async function mapTheUnmappedPlant(studio, director) {

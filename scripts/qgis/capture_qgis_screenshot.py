@@ -32,7 +32,11 @@ DRAW_DELAY_MILLISECONDS = int(os.environ.get("QGIS_SCREENSHOT_DELAY_MS", "16000"
 ARCHES_URL = os.environ["ARCHES_URL"]
 CONTRIBUTOR_USERNAME = "demo_contributor"
 DEMO_PASSWORD = "foss4gna-demo-password"
-WINDOW_WIDTH, WINDOW_HEIGHT = 1920, 1080
+# Just wide enough for the plugin panel beside the map and table, so the
+# large fonts below fill as much of the slide as they can.
+WINDOW_WIDTH, WINDOW_HEIGHT = 1700, 1000
+TABLE_FONT_POINT_SIZE = 22
+PLUGIN_FONT_POINT_SIZE = 17
 # Centred on Rancho Vega (Web Mercator), sized for the map area left above
 # the docked attribute table.
 RANCHO_VEGA_CENTER_X, RANCHO_VEGA_CENTER_Y = -13175797, 4053078
@@ -93,11 +97,14 @@ def add_layers(project):
             }
         )
     )
-    # The table is about the relationship-derived columns, not the keys.
+    # The table is about the relationship-derived architect column, not the
+    # keys. Designation is hidden too: which works aren't landmarks is the
+    # demo's question, asked after this slide.
     table_config = monuments.attributeTableConfig()
     columns = table_config.columns()
+    hidden_columns = ("gid", "resourceinstanceid", "tileid", "nodeid", "designation")
     for column in columns:
-        column.hidden = column.name in ("gid", "resourceinstanceid", "tileid", "nodeid")
+        column.hidden = column.name in hidden_columns
     table_config.setColumns(columns)
     table_config.setSortExpression('"built"')
     table_config.setActionWidgetVisible(False)
@@ -138,10 +145,13 @@ def register_rancho_vega(monuments):
     # Registering clears the selection; select it again for the map.
     monuments.selectByExpression("\"name\" = 'Rancho Vega'")
     plugin_dialog.setWindowFlags(Qt.WindowType.Widget)
+    plugin_font = plugin_dialog.font()
+    plugin_font.setPointSize(PLUGIN_FONT_POINT_SIZE)
+    plugin_dialog.setFont(plugin_font)
     dock = QDockWidget("Arches Project plugin", iface.mainWindow())
     dock.setWidget(plugin_dialog)
     iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
-    iface.mainWindow().resizeDocks([dock], [560], Qt.Orientation.Horizontal)
+    iface.mainWindow().resizeDocks([dock], [600], Qt.Orientation.Horizontal)
     plugin_dialog.show()
     iface.mapCanvas().setExtent(RANCHO_VEGA_EXTENT)
     iface.mapCanvas().refresh()
@@ -183,10 +193,17 @@ def open_attribute_table(monuments):
     dock = QDockWidget("Attribute table: Paul R. Williams works", iface.mainWindow())
     dock.setWidget(table_dialog)
     iface.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock)
-    iface.mainWindow().resizeDocks([dock], [330], Qt.Orientation.Vertical)
+    # Tall enough for all eight rows at the large font, with no empty space.
+    iface.mainWindow().resizeDocks([dock], [380], Qt.Orientation.Vertical)
     table_dialog.show()
     for table_view in table_dialog.findChildren(QTableView):
+        table_font = table_view.font()
+        table_font.setPointSize(TABLE_FONT_POINT_SIZE)
+        table_view.setFont(table_font)
+        table_view.horizontalHeader().setFont(table_font)
+        table_view.verticalHeader().setFont(table_font)
         table_view.resizeColumnsToContents()
+        table_view.resizeRowsToContents()
     iface.mapCanvas().setExtent(RANCHO_VEGA_EXTENT)
     iface.mapCanvas().refresh()
     log("attribute table docked")

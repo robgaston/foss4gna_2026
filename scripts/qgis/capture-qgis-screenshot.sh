@@ -40,9 +40,9 @@ export ARCHES_URL="${ARCHES_URL:-http://localhost:8003}"
     --profiles-path "$profiles_directory" \
     --code "$deck_directory/scripts/qgis/capture_qgis_screenshot.py"
 
-# The slide needs the map, attribute table and plugin panel to be readable
-# when projected, so crop away QGIS's toolbars and status bar (the layer
-# panel is hidden). The grab is 2x: 3840×2160 for a 1920×1080 window.
+# The slide shows the map, attribute table and plugin panel, so crop away
+# QGIS's toolbars, the table's filter bar and the status bar (the layer panel
+# is hidden). The grab is 2x: 3400×2000 for a 1700×1000 window.
 ffmpeg -v error -y -i "$QGIS_SCREENSHOT_PATH" \
-    -vf "crop=3840:1940:0:160" \
+    -vf "crop=3352:1672:0:156" \
     "$deck_directory/assets/screenshots/qgis-spatial-view-cropped.png"

@@ -34,10 +34,11 @@ import { mapTheUnmappedPlant, showArchesInGeoLibre } from "./demo/geolibre-segme
 const VIDEO_NAME = "foss4gna-demo";
 const POSTER_SECONDS = 2.5;
 
+// The eyebrow uses the deck's lighter red for dark backgrounds.
 function titleCardHtml(heading, subheading) {
     return `<!doctype html><html><body style="margin:0;height:100vh;display:flex;flex-direction:column;
         justify-content:center;padding:0 9vw;background:#1f2326;color:#fff;font-family:Montserrat,Helvetica,Arial,sans-serif">
-        <div style="color:#c4151a;font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:1.1rem">
+        <div style="color:#f26b6f;font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:1.1rem">
             FOSS4G North America 2026 · Relationships Are the Data</div>
         <div style="font-size:3.4rem;font-weight:700;margin:1.2rem 0 1rem;max-width:22ch;line-height:1.1">${heading}</div>
         <div style="font-size:1.5rem;color:#c9c6c1;max-width:48ch;line-height:1.4">${subheading}</div>
