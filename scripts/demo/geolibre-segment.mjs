@@ -78,7 +78,7 @@ export async function showArchesInGeoLibre(studio, director) {
     await studio.layerRow(MONUMENT_LAYER_NAME).waitFor({ timeout: 120_000 });
     await pause(1500);
 
-    await director.caption("Rancho Vega: the same 21 buildings, with the same permissions");
+    await director.caption("Rancho Vega: the same footprints, with the same permissions");
     await searchPlace(studio, `${RANCHO_VEGA.latitude}, ${RANCHO_VEGA.longitude}`);
     await zoomTowards(studio, RANCHO_VEGA, 5);
     await pause(1500);

@@ -326,6 +326,45 @@
     box-shadow: 0 0.25em 1em rgba(0, 0, 0, 0.18);
 }
 
+/* Slide 2 opens on the full photo. When the map's fragment shows, the
+   photo shrinks and the map slides up into the space it frees. */
+.reveal img.photo.hero {
+    transition:
+        height 0.7s ease,
+        object-position 0.7s ease;
+}
+
+.reveal .stack:has(> .map-reveal.visible) img.photo.hero {
+    height: 5.4em;
+    object-position: center 40%;
+}
+
+.reveal .fragment.map-reveal {
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    transform: translateY(2em);
+    transition:
+        max-height 0.7s ease,
+        margin-top 0.7s ease,
+        opacity 0.7s ease,
+        transform 0.7s ease;
+}
+
+.reveal .fragment.map-reveal.visible {
+    margin-top: 0.5em;
+    max-height: 9em;
+    transform: none;
+}
+
+.reveal img.photo.short {
+    height: 5.4em;
+}
+
+.reveal img.photo.map {
+    object-position: center;
+}
+
 .reveal .placeholder {
     display: flex;
     flex-direction: column;

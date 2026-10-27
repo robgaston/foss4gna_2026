@@ -119,7 +119,7 @@ export async function openRanchoVega(studio, director) {
         await pause(2500);
     });
     await director.caption(
-        "On its own, an unremarkable record: garden apartments, 21 buildings, built 1945",
+        "On its own, an unremarkable record: 21 garden apartment buildings and their garages, built 1945",
     );
     await glideTo(page.locator(".report-map"));
     await pause(2500);
