@@ -488,14 +488,13 @@
     width: auto;
 }
 
-.reveal .slide-mark {
-    position: absolute;
-    right: 1.4em;
-    top: 1.2em;
-    width: 1.3em;
-    height: auto;
-    margin: 0;
-    opacity: 0.9;
+/* The Arches mark, inline before the word "Arches" in a heading. */
+.reveal h2 .heading-mark {
+    display: inline-block;
+    height: 0.82em;
+    width: auto;
+    margin: 0 0.28em 0 0;
+    vertical-align: -0.06em;
 }
 
 .reveal .network-motif {
