@@ -571,6 +571,101 @@
     max-height: 13.4em;
 }
 
+/* ---------- Flat table vs. JSON-LD (slide 8) ---------- */
+
+.reveal .flat-fact {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+}
+
+.reveal .flat-fact p {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.reveal .flat-fact .record {
+    white-space: nowrap;
+    box-shadow: none;
+    border: 0.06em solid var(--line);
+    padding: 0.2em 0.9em;
+}
+
+.reveal .export-panel {
+    background: var(--mist);
+    border-radius: 0.4em;
+    padding: 0.5em 0.9em 0.7em;
+    margin: 0.5em 0 0.4em;
+}
+
+.reveal .export-panel > p {
+    margin: 0 0 0.4em;
+}
+
+.reveal .export-panel .caption {
+    font-size: 0.9em;
+    margin: 0 0 0 0.6em;
+}
+
+.reveal .export-panel pre.code.focus {
+    font-size: 0.5em;
+    line-height: 1.35;
+    padding: 0.7em 1.1em;
+}
+
+.reveal .columns.export-answers {
+    grid-template-columns: 3fr 2fr;
+    align-items: center;
+}
+
+.reveal ol.answers {
+    font-size: 0.62em;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.reveal ol.answers li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6em;
+}
+
+.reveal ol.answers strong {
+    font-weight: 700;
+}
+
+.reveal ol.answers em {
+    font-style: italic;
+}
+
+.reveal ol.answers li + li {
+    margin-top: 0.6em;
+}
+
+/* Numbered markers tie each answer to its highlighted line in the code. */
+.reveal .marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    background: var(--arches-red);
+    color: var(--paper);
+    font-family: var(--body-font);
+    font-size: 0.85em;
+    font-weight: 700;
+    font-style: normal;
+    line-height: 1;
+}
+
+.reveal pre.code .marker {
+    font-size: 0.8em;
+    vertical-align: 0.1em;
+}
+
 /* ---------- Takeaway line ---------- */
 
 .reveal p.so-what {

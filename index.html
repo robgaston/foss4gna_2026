@@ -158,10 +158,12 @@
                     <div class="columns wide-left">
                         <div>
                             <p class="lede" style="font-size: 0.85em">Open-source data management, developed with the Getty Conservation Institute and World Monuments Fund for a hard problem: <strong>describing cultural heritage.</strong></p>
+                            <br />
                             <ul class="small">
+                                <li>Custom graph data models designed in app</li>
                                 <li>Uncertain dates, fuzzy extents, dense relationships</li>
-                                <li>Records that must outlive the software</li>
-                                <li>Los Angeles' own inventory, HistoricPlacesLA, runs on it</li>
+                                <li>Native semantic data</li>
+                                <li>Records that outlive the software (self-describing)</li>
                             </ul>
                         </div>
                         <div class="stack">
@@ -178,6 +180,8 @@
                             <li>HistoricPlacesLA, the City's historic resources inventory and the source of the Rancho Vega photo, is an Arches deployment. Say so: the story isn't hypothetical.</li>
                             <li>Point at the stack card: it runs on what this room already runs. If asked about the map library: MapLibre from Arches 8.2 (upcoming); 8.1 still ships mapbox-gl 1.13, the last BSD-licensed release.</li>
                             <li>Standards in one breath: CIDOC CRM for meaning, SKOS for terms, JSON-LD out. Not a lesson in CIDOC CRM.</li>
+                            <li>CIDOC CRM - International Council of Museums (ICOM), International Committee for Documentation, Conceptural Reference Model</li>
+                            <li>Self-describing records ensure long-term preservation and interoperability.</li>
                             <li>arches-her: models built for Historic Environment Records in England.</li>
                         </ul>
                     </aside>
@@ -327,7 +331,7 @@
                             <p>Searching is arches-search (Arches' new search app): the corridor in step 1 and the query in step 3, ending on its SQL. In step 2, a result's "Related" link opens Arches' relationship graph on a page of its own (a small plugin in the demo project), since arches-search doesn't have a graph yet. The old search page doesn't appear at all.</p>
                             <ul>
                                 <li>Step 3 ends with Describe Query → SQL: let the room see the <code>AND NOT EXISTS</code>. It's the graph question in SQL they already know. About 15 seconds, out of the demo's buffer.</li>
-                                <li>After step 4, come back and press RIGHT for "Self-describing, not just legible".</li>
+                                <li>After step 4, come back and press RIGHT for "Data that are self-describing & legible".</li>
                                 <li>If the live demo fails: press DOWN for the full recorded demo (captioned). Don't troubleshoot on stage. The video is 3:20 against about 7 minutes live, so the spare 3–4 minutes go to questions; don't fill them by retrying the live demo.</li>
                             </ul>
                         </aside>
@@ -350,45 +354,43 @@
                      4. PAYOFF (13:00 to 15:00)
                      ============================================================ -->
 
-                <!-- Slide 8: Self-describing, not just legible -->
+                <!-- Slide 8: Data that are self-describing & legible -->
                 <section>
                     <p class="eyebrow">03 · The payoff</p>
-                    <h2>Self-describing, not just legible</h2>
-                    <div class="columns wide-right">
-                        <div class="stack">
-                            <div>
-                                <p class="small muted">In a flat table</p>
-                                <div class="record" style="box-shadow: none; border: 0.06em solid #dcd8d3">BLT_BY: "P. Williams"</div>
-                            </div>
-                            <ul class="small">
-                                <li><strong>Who?</strong> A person record with a stable id, not a name string</li>
-                                <li><strong>What relationship?</strong> <em>P14 carried out by</em>, a published definition</li>
-                                <li><strong>In what role?</strong> <em>Architect</em>, a vocabulary term</li>
-                            </ul>
-                            <p class="small so-what">An AI agent can follow <em>P14 carried out by</em>. It can only guess what <em>BLT_BY</em> means.</p>
-                        </div>
-                        <div>
-                            <p class="small muted">The same fact, exported from Arches as JSON-LD</p>
+                    <h2>Data that are self-describing & legible</h2>
+                    <div class="flat-fact">
+                        <p class="small muted">In a flat table</p>
+                        <div class="record">BLT_BY: "P. Williams"</div>
+                        <p class="small muted">Who? What relationship? In what role? It doesn't say.</p>
+                    </div>
+                    <div class="export-panel">
+                        <p class="small muted">The same fact, exported from Arches as JSON-LD <span class="caption">Rancho Vega's real export, one path kept.</span></p>
+                        <div class="columns export-answers">
 <pre class="code focus">{
   "@type": "crm:E18_Physical_Thing",
   "crm:P12i_was_present_at": {
     "@type": "crm:E7_Activity",
     "crm:P9_consists_of": {
       "@type": "crm:E7_Activity",
-      <span class="hl"><span class="term">"crm:P14_carried_out_by"</span>: {</span>
-        <span class="hl"><span class="term">"@id"</span>: <span class="literal">".../resources/8ec6c939-…"</span>,</span>
+      <span class="hl"><span class="term">"crm:P14_carried_out_by"</span>: {</span> <span class="marker">2</span>
+        <span class="hl"><span class="term">"@id"</span>: <span class="literal">".../resources/8ec6c939-…"</span>,</span> <span class="marker">1</span>
         <span class="hl"><span class="term">"@type"</span>: <span class="literal">"crm:E21_Person"</span></span>
       },
-      "crm:P2_has_type": { <span class="hl"><span class="term">"rdfs:label"</span>: <span class="literal">"Architect"</span></span> }
+      "crm:P2_has_type": { <span class="hl"><span class="term">"rdfs:label"</span>: <span class="literal">"Architect"</span></span> } <span class="marker">3</span>
 } } }</pre>
-                            <p class="caption">Rancho Vega's real export, one path kept.</p>
+                            <ol class="small answers">
+                                <li><span class="marker">1</span><span><strong>Who?</strong> A person record with a stable id, not a name string</span></li>
+                                <li><span class="marker">2</span><span><strong>What relationship?</strong> <em>P14 carried out by</em>, a published definition</span></li>
+                                <li><span class="marker">3</span><span><strong>In what role?</strong> <em>Architect</em>, a vocabulary term</span></li>
+                            </ol>
                         </div>
                     </div>
+                    <p class="small so-what">An AI agent can follow <em>P14 carried out by</em>. It can only guess what <em>BLT_BY</em> means.</p>
                     <aside class="notes">
                         <p>⏱ 13:00 to 14:15</p>
                         <ul>
-                            <li>Left: what most systems store. Right: what Arches exports for the same fact. It's the real export with one path kept: tile ids removed, namespaces shortened, whitespace compacted, nothing reordered.</li>
-                            <li>Don't read the JSON. The dimmed lines are structure; the highlighted ones answer the three questions on the left.</li>
+                            <li>Top: what most systems store. Below it: what Arches exports for the same fact. It's the real export with one path kept: tile ids removed, namespaces shortened, whitespace compacted, nothing reordered.</li>
+                            <li>Don't read the JSON. The dimmed lines are structure; the numbered, highlighted lines answer the three questions the flat table can't, matching the numbered list beside the code.</li>
                             <li><em>"Who is P. Williams? Which one? In what role? The export answers all three without a data dictionary."</em> Point at each: the @id is a Person record, not a string; P14 has a published CIDOC CRM definition; Architect is a vocabulary term.</li>
                             <li><em>"BLT_BY is legible to whoever made the table. This is self-describing: it carries its own meaning."</em></li>
                             <li>AI, concretely: hand an agent the question from the demo, "which of Williams's works aren't landmarks?" With this export it follows P14 to a Person with a stable id and checks the designation type. With the flat table it has to guess that BLT_BY is an architect and that "P. Williams" is the same person everywhere.</li>
