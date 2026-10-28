@@ -553,13 +553,35 @@
     display: grid;
     /* The screenshot holds the map, table and plugin panel, so it gets most
        of the width. */
-    grid-template-columns: 1fr 2.6fr;
-    gap: 1em;
+    grid-template-columns: 1fr 2.2fr;
+    gap: 1.2em;
     align-items: start;
 }
 
-.reveal .gis-list li {
-    margin-bottom: 0.6em;
+.reveal dl.gis-points {
+    margin: 0;
+}
+
+.reveal dl.gis-points > div {
+    padding: 0.45em 0;
+}
+
+.reveal dl.gis-points > div + div {
+    border-top: 0.06em solid var(--line);
+}
+
+.reveal dl.gis-points dt {
+    font-family: var(--heading-font);
+    font-size: 0.66em;
+    font-weight: 700;
+    color: var(--arches-red);
+}
+
+.reveal dl.gis-points dd {
+    margin: 0.2em 0 0;
+    font-size: 0.62em;
+    line-height: 1.4;
+    color: var(--ink);
 }
 
 /* Tall enough for the attribute table to read when projected, short enough

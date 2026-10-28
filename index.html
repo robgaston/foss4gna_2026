@@ -284,12 +284,24 @@
                     <p class="eyebrow">01 · The model</p>
                     <h2>Keep your features: Arches speaks GIS</h2>
                     <div class="gis-layout">
-                        <ul class="small gis-list">
-                            <li><strong>PostGIS:</strong> geometry lives with the rest of your data</li>
-                            <li><strong>Spatial views:</strong> open in QGIS; publish with GeoServer or pg_featureserv</li>
-                            <li><strong>APIs:</strong> GeoJSON, vector tiles</li>
-                            <li><strong>GIS plugins</strong> for QGIS <span class="muted">(QGIS 3 for now)</span> and GeoLibre <span class="muted">(experimental, Arches 8.2)</span> edit geometries directly in your GIS</li>
-                        </ul>
+                        <dl class="gis-points">
+                            <div>
+                                <dt>PostGIS</dt>
+                                <dd>Geometry lives with the rest of your data</dd>
+                            </div>
+                            <div>
+                                <dt>Spatial views</dt>
+                                <dd>Open in QGIS; publish with GeoServer or pg_featureserv</dd>
+                            </div>
+                            <div>
+                                <dt>APIs</dt>
+                                <dd>GeoJSON, vector tiles</dd>
+                            </div>
+                            <div>
+                                <dt>GIS plugins</dt>
+                                <dd>Edit geometries directly in your GIS: QGIS <span class="muted">(QGIS 3 for now)</span> and GeoLibre <span class="muted">(experimental, Arches 8.2)</span></dd>
+                            </div>
+                        </dl>
                         <figure style="margin: 0">
                             <img class="screenshot" src="assets/screenshots/qgis-spatial-view-cropped.png" alt="QGIS 3.44 showing Rancho Vega's footprints from a PostGIS view of the Arches data, above an attribute table of Paul R. Williams's works with name, type, year built and architect columns, beside the Arches QGIS plugin with Rancho Vega selected for editing" />
                             <figcaption class="caption">QGIS reading a PostGIS view, beside the Arches plugin. The architect column comes from Arches relationships.</figcaption>
