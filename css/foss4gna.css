@@ -329,6 +329,11 @@
     box-shadow: 0 0.25em 1em rgba(0, 0, 0, 0.18);
 }
 
+/* Under a full heading rather than a backup label, so it gives up some height. */
+.reveal .screenshot-full.under-heading {
+    max-height: 13.2em;
+}
+
 .reveal img.photo {
     display: block;
     width: 100%;
@@ -466,6 +471,12 @@
     margin: 0 0 1.6em;
 }
 
+.reveal .title-slide .subtitle.takeaway {
+    color: var(--arches-red-on-dark);
+    font-weight: 700;
+    max-width: 30em;
+}
+
 .reveal .title-slide .byline {
     font-size: 0.7em;
     border-top: 0.06em solid rgba(255, 255, 255, 0.25);
@@ -548,6 +559,11 @@
 
 /* ---------- GIS slide ---------- */
 
+.reveal .gis-tagline {
+    font-size: 0.7em;
+    margin: -0.3em 0 0.4em;
+}
+
 .reveal .gis-layout {
     display: grid;
     /* The screenshot holds the map, table and plugin panel, so it gets most
@@ -592,7 +608,7 @@
     max-height: 13.4em;
 }
 
-/* ---------- Flat table vs. JSON-LD (slide 8) ---------- */
+/* ---------- Flat table vs. JSON-LD (slide 9) ---------- */
 
 .reveal .flat-fact {
     display: flex;
@@ -687,6 +703,14 @@
     vertical-align: 0.1em;
 }
 
+/* An annotation on the code, not part of it, so it's set in the body font. */
+.reveal pre.code .callout {
+    font-family: var(--body-font);
+    font-style: italic;
+    font-weight: 700;
+    color: var(--paper);
+}
+
 /* ---------- Takeaway line ---------- */
 
 .reveal p.so-what {
@@ -694,39 +718,6 @@
     font-weight: 700;
     border-left: 0.2em solid var(--arches-red);
     padding-left: 0.6em;
-}
-
-/* ---------- Spectrum ---------- */
-
-.reveal .spectrum {
-    position: relative;
-    height: 0.9em;
-    border-radius: 0.45em;
-    background: linear-gradient(90deg, var(--line), var(--arches-red));
-    margin: 1.6em 0 0.6em;
-}
-
-.reveal .spectrum-marker {
-    position: absolute;
-    left: 74%;
-    top: 50%;
-    width: 1.5em;
-    height: 1.5em;
-    border-radius: 50%;
-    background: var(--ink);
-    border: 0.15em solid var(--paper);
-    transform: translate(-50%, -50%);
-}
-
-.reveal .spectrum-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.6em;
-    color: var(--ink-soft);
-}
-
-.reveal .spectrum-labels div:last-child {
-    text-align: right;
 }
 
 /* ---------- QR ---------- */

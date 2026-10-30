@@ -61,16 +61,19 @@ export async function screenCorridor(studio, director) {
     );
     await pause(1500);
     await glideAndClick(page.getByRole("button", { name: "Map", exact: true }));
+    // The map opens with its Map Tools panel showing.
+    const mapToolsPanel = page.locator("section[aria-label='Map Tools']");
+    await mapToolsPanel.waitFor();
     await pause(2000);
-    await glideAndClick(page.getByText("Draw", { exact: true }));
-    await pause(800);
 
-    // Fly to the corridor, centered in the part of the map the draw panel leaves visible.
+    // Fly to the corridor, centered in the part of the map the tools panel leaves visible.
     const canvas = await exposeSearchMap(page);
-    // The draw panel overlays the map's right side; its "Draw type" label marks its left edge.
-    const drawPanel = await page.getByText("Draw type", { exact: true }).boundingBox();
-    const visibleRight = drawPanel.x - 20;
-    const visibleCenterX = (canvas.left + visibleRight) / 2;
+    // The tools panel overlays the map's left side.
+    const toolsPanelBox = await mapToolsPanel.boundingBox();
+    const visibleLeft = toolsPanelBox.x + toolsPanelBox.width + 20;
+    // Leave room for the place search and zoom controls on the right.
+    const visibleRight = canvas.right - 60;
+    const visibleCenterX = (visibleLeft + visibleRight) / 2;
     await page.evaluate(
         ({ view, offsetX }) =>
             window.demoSearchMap.flyTo({ ...view, offset: [offsetX, 0], duration: 3500 }),
@@ -79,27 +82,27 @@ export async function screenCorridor(studio, director) {
     await pause(4000);
 
     await director.caption("Draw the corridor's centerline...");
-    await glideAndClick(page.locator("#draw-type"));
-    await glideAndClick(page.getByRole("option", { name: "Draw a Polyline" }));
+    await glideAndClick(mapToolsPanel.getByRole("button", { name: "Line", exact: true }));
     await pause(500);
     const oxnard = await searchMapScreenPoint(page, [CORRIDOR_VIEW.center[0], OXNARD_STREET_LATITUDE]);
-    const lineStart = { x: canvas.left + 25, y: oxnard.y };
-    const lineEnd = { x: visibleRight - 25, y: oxnard.y };
+    const lineStart = { x: visibleLeft + 5, y: oxnard.y };
+    const lineEnd = { x: visibleRight - 5, y: oxnard.y };
     await page.mouse.move(lineStart.x, lineStart.y, { steps: 20 });
     await page.mouse.click(lineStart.x, lineStart.y);
     await pause(300);
     await page.mouse.move(lineEnd.x, lineEnd.y, { steps: 40 });
     await page.mouse.dblclick(lineEnd.x, lineEnd.y);
-    await pause(1500);
+    // The map zooms to the finished line.
+    await pause(2000);
 
+    // The buffer's default distance is the corridor's 100 m.
     await director.caption(`...and buffer it ${CORRIDOR_BUFFER_METERS} m`);
-    const bufferInput = page.locator(".buffer-controls input").first();
-    await glideAndClick(bufferInput);
-    await bufferInput.press("ControlOrMeta+A");
-    await bufferInput.pressSequentially(String(CORRIDOR_BUFFER_METERS), { delay: 120 });
-    await bufferInput.press("Tab");
+    await glideAndClick(mapToolsPanel.locator(".geometry-buffer-toggle").first());
     const oneResult = page.getByText(/^1 results?$/);
     await oneResult.waitFor({ timeout: 30_000 });
+    await pause(1500);
+    // Close the tools panel to show the whole corridor.
+    await glideAndClick(mapToolsPanel.getByRole("button", { name: "Close panel" }));
     await pause(1500);
     await director.caption(
         "One inventoried resource is in the way: Rancho Vega. It isn't a designated landmark",
