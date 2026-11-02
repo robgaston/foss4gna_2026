@@ -158,13 +158,13 @@
                     <h2><img class="heading-mark" src="assets/brand/arches-mark-large.png" alt="" />Arches: open source, standards-based</h2>
                     <div class="columns wide-left">
                         <div>
-                            <p class="lede" style="font-size: 0.85em">Open-source data management, developed with the Getty Conservation Institute and World Monuments Fund for a hard problem: <strong>describing cultural heritage.</strong></p>
+                            <p class="lede" style="font-size: 0.85em">Open-source data management, supported by the Getty Conservation Institute and World Monuments Fund for a hard problem: <strong>describing cultural heritage.</strong></p>
                             <br />
                             <ul class="small">
                                 <li>Custom graph data models designed in app</li>
                                 <li>Edit and review in app: workflows, provisional edits</li>
                                 <li>Uncertain dates, fuzzy extents, dense relationships</li>
-                                <li>Native semantic data</li>
+                                <li>Native semantic and geospatial data</li>
                                 <li>Records that outlive the software (self-describing)</li>
                             </ul>
                         </div>
@@ -273,8 +273,8 @@
                 <section>
                     <p class="eyebrow">01 · The model</p>
                     <h2>Models are designed in the app</h2>
-                    <img class="screenshot-full under-heading" src="assets/screenshots/graph-designer-person.png" alt="Arches graph designer showing the Person resource model's CIDOC CRM branches" />
-                    <p class="caption" style="text-align: center">The arches-her Person model in Arches' graph designer: each branch has a CIDOC CRM class (E21 Person, E67 Birth, E41 Appellation...).</p>
+                    <img class="screenshot-full under-heading" src="assets/screenshots/graph-designer-person.png" alt="Arches graph designer showing the Person resource model's node tree expanded: Person, Birth, Place of Birth, Birthplace, each with its CIDOC CRM class" />
+                    <p class="caption" style="text-align: center">The arches-her Person model in Arches' graph designer: nodes nest into branches, each with a CIDOC CRM class (E21 Person › E67 Birth › E53 Place › E41 Appellation).</p>
                     <aside class="notes">
                         <p>⏱ 3:15 to 3:30</p>
                         <ul>
@@ -305,7 +305,7 @@
                             </div>
                             <div>
                                 <dt>GIS plugins</dt>
-                                <dd>Edit geometries directly in your GIS: QGIS <span class="muted">(QGIS 3 for now)</span> and GeoLibre <span class="muted">(experimental, Arches 8.2)</span></dd>
+                                <dd>Edit geometries directly in your GIS: QGIS <span class="muted">(QGIS 3 for now)</span>, ArcGIS Pro, and GeoLibre <span class="muted">(experimental, Arches 8.2)</span></dd>
                             </div>
                         </dl>
                         <figure style="margin: 0">
@@ -345,7 +345,7 @@
                         </ol>
                         <p class="small muted" style="margin-top: 1.2em">1,343 LA Historic-Cultural Monuments (City Planning) · Wikidata · LA County Assessor · OpenStreetMap</p>
                         <aside class="notes">
-                            <p>⏱ 4:10 to 10:10: 6 minutes, live. Arches for steps 1 to 3 (about 3:55), then GeoLibre for step 4 (about 1:50). Script: notes/foss4gna/demo_script.md.</p>
+                            <p>⏱ 4:10 to 10:10: 6 minutes, live. Arches for steps 1 to 3 (about 4:10), then GeoLibre for step 4 (about 1:40). No buffer. Script: notes/foss4gna/demo_script.md.</p>
                             <p>Searching is arches-search (Arches' new search app): the corridor in step 1 and the query in step 3, ending on its SQL. In step 2, the Rancho Vega result's "Related" link opens Arches' relationship graph on a page of its own (a small plugin in the demo project), since arches-search doesn't have a graph yet. The old search page doesn't appear at all.</p>
                             <ul>
                                 <li>Say "Let's see it live", not "I'll attempt a demo".</li>
@@ -353,17 +353,18 @@
                                 <li>Step 2: skip the report. Go from the step 1 result straight to <strong>Related</strong> and name the relationships on the graph.</li>
                                 <li>Then, still step 2 (25 seconds): back in search, <strong>Clear all</strong>, Monument, "Paul Revere Williams": one result, a house with his name on it. Turn on <strong>Include Related</strong>: 18, his 16 works and, two hops out, the Lockheed-Vega plant. Bridge: <em>"That's a wide net. Now let's ask a precise question."</em> If running long, cut this, not step 3.</li>
                                 <li>Step 3: say why before you build it: <em>"This query hops across relationships: monument to person to Williams, and monument to designation."</em> Build it, read the plain-language query aloud, then show the SQL as the proof: the <code>AND NOT EXISTS</code> is the graph question in SQL this room already knows.</li>
+                                <li>End the Arches part on the Lockheed-Vega plant's report (tab 4, 15 seconds): a full record, but "No geometry has been recorded for this resource yet." Say <em>"Nobody has mapped it. No map, no spatial view, no GIS layer can show it. Let's fix that in a GIS."</em></li>
                                 <li>Step 4: GeoLibre is already signed in as <code>demo_contributor</code> (set up before the talk). After the push, go straight to the review tab; no search detour.</li>
                                 <li>After step 4, come back and press RIGHT for "Data that are self-describing & legible".</li>
-                                <li>If the live demo fails: press DOWN for the full recorded demo (captioned). Don't troubleshoot on stage. The video is 3:39 against 6 minutes live, so the spare 2 minutes or so go to questions; don't fill them by retrying the live demo.</li>
+                                <li>If the live demo fails: press DOWN for the full recorded demo (captioned). Don't troubleshoot on stage. The video is 3:47 against 6 minutes live, so the spare 2 minutes or so go to questions; don't fill them by retrying the live demo.</li>
                             </ul>
                         </aside>
                     </section>
                     <section>
-                        <p class="eyebrow">Demo recording (3:39)</p>
+                        <p class="eyebrow">Demo recording (3:47)</p>
                         <video class="screenshot-full" data-src="assets/video/foss4gna-demo.mp4" poster="assets/video/foss4gna-demo-poster.png" controls muted playsinline></video>
                         <aside class="notes">
-                            <p>The full demo as one captioned video: the corridor search in arches-search, Rancho Vega's record and labelled relationships, Williams's works, the same search with Include Related on, the "not landmarks" query in arches-search and its SQL, Arches in GeoLibre, mapping the Lockheed-Vega plant, and the review in Arches.</p>
+                            <p>The full demo as one captioned video: the corridor search in arches-search, Rancho Vega's record and labelled relationships, Williams's works, the same search with Include Related on, the "not landmarks" query in arches-search and its SQL, the plant's report with no geometry, Arches in GeoLibre, mapping the Lockheed-Vega plant, and the review in Arches.</p>
                             <ul>
                                 <li>Press play (it doesn't autoplay) and narrate over the captions. Press F on the video for full screen.</li>
                                 <li>Recorded with scripts/record-demo.mjs.</li>

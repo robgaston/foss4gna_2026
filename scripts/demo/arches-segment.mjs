@@ -2,7 +2,8 @@
 // open Rancho Vega, follow its relationships to Paul R. Williams (the core
 // graph, on the demo's standalone related-resources page), search across those
 // relationships with arches-search's Include Related switch, ask the "not
-// landmarks" question in arches-search, and (at the end) review the GeoLibre
+// landmarks" question in arches-search, show that the Lockheed-Vega plant has
+// no geometry, and (at the end) review the GeoLibre
 // edit as a reviewer.
 
 import {
@@ -236,6 +237,27 @@ export async function searchAcrossRelationships(studio, director) {
     await pause(2500);
     await glideTo(page.getByRole("link", { name: "Rancho Vega", exact: true }));
     await pause(2500);
+}
+
+// Demo step A5, the end of the Arches part: the Lockheed-Vega plant's report,
+// signed out. A full record, but its map says no geometry has been recorded,
+// which sets up mapping it in GeoLibre.
+export async function showThePlantHasNoMap(studio, director) {
+    const { page, pause, glideTo } = studio;
+    await director.caption("");
+    const noGeometry = page.getByText("No geometry has been recorded for this resource yet.");
+    await director.goto(`${ARCHES_URL}/report/${PLANT_RESOURCE_ID}`, async () => {
+        await noGeometry.waitFor({ timeout: 30_000 });
+        await pause(1500);
+    });
+    await director.caption(
+        "The Lockheed-Vega plant: in Arches through its relationships, with a type, a date and a photo",
+    );
+    await glideTo(page.getByText("Aircraft Factory", { exact: true }).first());
+    await pause(3000);
+    await director.caption("But nobody has mapped it, so no map or spatial view can show it");
+    await glideTo(noGeometry);
+    await pause(4000);
 }
 
 /** Signs in without showing the login page; the director cuts the wait. */

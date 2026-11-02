@@ -91,14 +91,14 @@ export async function showArchesInGeoLibre(studio, director) {
 
 export async function mapTheUnmappedPlant(studio, director) {
     const { page, panel, pause, glideTo, glideAndClick } = studio;
-    await director.caption("Now the Lockheed-Vega plant: in Arches, but never mapped");
+    await director.caption("Now map the Lockheed-Vega plant");
     const section = panel.locator(".edit-resources-section");
     await glideAndClick(section.getByLabel("Model and geometry to edit"));
     await glideAndClick(page.getByRole("option", { name: MONUMENT_LAYER_NAME }));
     await glideAndClick(section.getByRole("button", { name: "Start a worklist" }));
     const missingCount = section.getByText(/resources? ha(s|ve) no Geospatial Coordinates/);
     await missingCount.waitFor({ timeout: 30_000 });
-    await director.caption("It has no geometry, so no spatial view, and no map, can show it");
+    await director.caption("A worklist finds the monuments with no geometry: the plant");
     await glideTo(missingCount);
     await pause(2500);
     await glideAndClick(section.getByRole("button", { name: `Add ${PLANT_NAME} to the worklist` }));

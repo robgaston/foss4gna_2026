@@ -21,11 +21,36 @@ const playwrightModule =
 const { chromium } = createRequire(import.meta.url)(playwrightModule);
 
 const outputDirectory = path.resolve("assets/screenshots");
-const viewport = { width: 1600, height: 900 };
+// Small enough that the graph tree stays readable when the slide scales the
+// screenshot down.
+const viewport = { width: 1120, height: 630 };
+
+const TREE_PANEL_RIGHT_EDGE = 540;
+
+// The graph tree, fully expanded and widened so the nested nodes' labels
+// aren't cut off: the slide is about the nodes and how they nest.
+async function expandGraphTree(page) {
+    await page.getByText("Expand", { exact: true }).first().click();
+    await page.waitForTimeout(1500);
+    // Drag the handle between the tree and the node form to the right.
+    const handle = await page.locator(".sidepanel-draggable").first().boundingBox();
+    const start = { x: handle.x + handle.width / 2, y: handle.y + handle.height / 2 };
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    await page.mouse.move(TREE_PANEL_RIGHT_EDGE, start.y, { steps: 20 });
+    await page.mouse.up();
+    await page.waitForTimeout(1500);
+}
 
 const shots = [
-    // The Person model in the graph designer (slide 5's vertical slide).
-    { name: "graph-designer-person", url: `/graph_designer/${PERSON_GRAPH_ID}`, waitMs: 6000, signIn: true },
+    // The Person model in the graph designer (slide 6).
+    {
+        name: "graph-designer-person",
+        url: `/graph_designer/${PERSON_GRAPH_ID}`,
+        waitMs: 6000,
+        signIn: true,
+        prepare: expandGraphTree,
+    },
 ];
 
 async function signIn(page) {
@@ -52,6 +77,7 @@ try {
         }
         await page.goto(`${archesUrl}${shot.url}`, { waitUntil: "networkidle" });
         await page.waitForTimeout(shot.waitMs);
+        await shot.prepare?.(page);
         const file = path.join(outputDirectory, `${shot.name}.png`);
         await page.screenshot({ path: file, fullPage: shot.fullPage ?? false });
         console.log(`Saved ${file}`);

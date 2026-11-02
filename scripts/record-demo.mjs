@@ -1,7 +1,7 @@
 // Records the whole FOSS4G NA demo as one captioned video: screening a
 // corridor in Arches, Rancho Vega's relationships, a search that follows
-// them (Include Related), the "Williams works that aren't landmarks" query in arches-search, the Arches data in
-// GeoLibre, mapping the Lockheed-Vega plant (a record with no geometry), and
+// them (Include Related), the "Williams works that aren't landmarks" query in arches-search, the
+// Lockheed-Vega plant's report with no geometry, the Arches data in GeoLibre, mapping the Lockheed-Vega plant (a record with no geometry), and
 // reviewing that edit back in Arches. The deck plays it as the demo's backup,
 // with a poster frame. The demo project's reset_demo_state runs before and after.
 //
@@ -27,6 +27,7 @@ import {
     reviewInArches,
     screenCorridor,
     searchAcrossRelationships,
+    showThePlantHasNoMap,
 } from "./demo/arches-segment.mjs";
 import { VIDEO_DIRECTORY, harness } from "./demo/config.mjs";
 import { resetDemoState } from "./demo/demo-state.mjs";
@@ -126,6 +127,7 @@ try {
         await followRelationships(studio, director);
         await searchAcrossRelationships(studio, director);
         await askWhatAFlatLayerCant(studio, director);
+        await showThePlantHasNoMap(studio, director);
         await director.caption("");
         await director.titleCard(
             "Part 2 · Bring it into your GIS",
