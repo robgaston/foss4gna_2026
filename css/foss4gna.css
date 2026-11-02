@@ -173,7 +173,10 @@
 .reveal .columns.centered { align-items: center; }
 .reveal .columns.model-graphs { grid-template-columns: 1.7fr 1fr; }
 
-.reveal .stack > * + * {
+/* reveal.js also gives vertical stacks (sections) and their backgrounds (divs
+   outside .slides) the class "stack"; the margin would push those slide
+   backgrounds down, leaving a light bar at the top. */
+.reveal .slides div.stack > * + * {
     margin-top: 0.7em;
 }
 
