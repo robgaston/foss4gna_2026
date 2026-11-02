@@ -1,5 +1,5 @@
 // Search settings for the demo recording and screenshots. Nothing in the demo uses core search: searching
-// is arches-search, and the relationship graphs are on a standalone page.
+// is arches-search, relationship graphs included.
 
 export const PERSON_GRAPH_ID = "22477f01-1a44-11e9-b0a9-000d3ab1e588";
 

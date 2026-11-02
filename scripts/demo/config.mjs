@@ -33,7 +33,6 @@ export const CONTRIBUTOR_USERNAME = "demo_contributor";
 export const REVIEWER_USERNAME = "demo_editor";
 
 export const RANCHO_VEGA_RESOURCE_ID = "04c47869-64f3-5b50-8f7f-7b2641327812";
-export const WILLIAMS_RESOURCE_ID = "8ec6c939-0f1b-5bc0-aaa0-1b213c83e927";
 export const PLANT_RESOURCE_ID = "b54fe8e0-4754-500c-ac83-32f97df97650";
 export const PLANT_NAME = "Lockheed-Vega Aircraft Plant, Burbank";
 export const MONUMENT_LAYER_NAME = "Monument: Geospatial Coordinates";

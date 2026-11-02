@@ -1,6 +1,6 @@
 // The Arches parts of the demo recording: screen a corridor in arches-search,
-// open Rancho Vega, follow its relationships to Paul R. Williams (the core
-// graph, on the demo's standalone related-resources page), search across those
+// open Rancho Vega, follow its relationships to Paul R. Williams (arches-search's
+// relationship graph, in the results' side panel), search across those
 // relationships with arches-search's Include Related switch, ask the "not
 // landmarks" question in arches-search, show that the Lockheed-Vega plant has
 // no geometry, and (at the end) review the GeoLibre
@@ -12,7 +12,6 @@ import {
     PLANT_RESOURCE_ID,
     RANCHO_VEGA_RESOURCE_ID,
     REVIEWER_USERNAME,
-    WILLIAMS_RESOURCE_ID,
 } from "./config.mjs";
 import {
     ADVANCED_SEARCH_PATH,
@@ -146,83 +145,75 @@ export async function openRanchoVega(studio, director) {
     await pause(2000);
 }
 
-/**
- * Where a resource's node is in the related-resources graph. Cytoscape keeps
- * its instance on the container element.
- */
-async function graphNodeScreenPoint(page, resourceId) {
-    return page.evaluate((nodeId) => {
-        const container = [...document.querySelectorAll("div")].find((element) => element._cyreg?.cy);
-        const node = container._cyreg.cy.getElementById(nodeId);
-        const position = node.renderedPosition();
-        const box = container.getBoundingClientRect();
-        return { x: box.left + position.x, y: box.top + position.y };
-    }, resourceId);
+function resultCard(page, name) {
+    return page
+        .locator(".descriptor-section")
+        .filter({ has: page.getByRole("link", { name, exact: true }) })
+        .first();
 }
 
-// Demo step A3: the core related-resources graph, opened from an arches-search
-// result through the demo's standalone related-resources plugin.
+// Demo step A3: arches-search's relationship graph, in the results' side
+// panel. Rancho Vega's relationships, summarised and then drawn; then Paul R.
+// Williams added as a second resource, which shows his 16 works and the path
+// between the two.
 export async function followRelationships(studio, director) {
     const { page, pause, glideTo, glideAndClick, typeInto } = studio;
+    const searchBox = page.getByPlaceholder(/Search places, people/);
     await director.caption("");
-    await director.goto(`${ARCHES_URL}${SIMPLE_SEARCH_PATH}`, () =>
-        page.getByPlaceholder(/Search places, people/).waitFor(),
-    );
-    await typeInto(page.getByPlaceholder(/Search places, people/), "Rancho Vega", 60);
+    await director.goto(`${ARCHES_URL}${SIMPLE_SEARCH_PATH}`, () => searchBox.waitFor());
+    await typeInto(searchBox, "Rancho Vega", 60);
     await page.keyboard.press("Enter");
-    const ranchoVegaRelated = page
-        .locator(".descriptor-section")
-        .filter({ has: page.getByRole("link", { name: "Rancho Vega", exact: true }) })
-        .locator("a.descriptor-section-related-action")
-        .first();
+    const ranchoVegaRelated = resultCard(page, "Rancho Vega").getByRole("button", { name: "Related" });
     await ranchoVegaRelated.waitFor({ timeout: 30_000 });
     await pause(1000);
-    await director.caption("Every result links to its relationship graph");
-    await glideTo(ranchoVegaRelated);
+    await director.caption("Every result can show what it's related to");
+    await glideAndClick(ranchoVegaRelated);
+    await page.getByRole("button", { name: "Show 15 relationships" }).waitFor({ timeout: 30_000 });
     await pause(1500);
-    // The link opens a new tab, which the recording can't follow; load it here instead.
-    await director.goto(`${ARCHES_URL}${await ranchoVegaRelated.getAttribute("href")}`, () =>
-        pause(4500),
-    );
     await director.caption(
         "Fifteen labelled relationships: designed by, developed by, housed workers of, identified by, built during, in the path of, and nine sources",
     );
-    await pause(5000);
-
-    await director.caption("Re-center the graph on the architect");
-    await glideAndClick(page.locator(".ion-asterisk").first());
-    await pause(800);
-    const williams = await graphNodeScreenPoint(page, WILLIAMS_RESOURCE_ID);
-    await page.mouse.move(williams.x, williams.y, { steps: 25 });
-    await pause(400);
-    await page.mouse.click(williams.x, williams.y);
-    await page.waitForURL(`**resourceid=${WILLIAMS_RESOURCE_ID}`, { timeout: 15_000 });
+    await glideTo(page.locator(".relationship-summary-row").filter({ hasText: "designed by" }));
+    await pause(4500);
+    await glideAndClick(page.getByRole("button", { name: "Show 15 relationships" }));
+    await page.getByText("16 resources in the graph").waitFor({ timeout: 30_000 });
     await pause(4000);
+
+    await director.caption("Now add the architect");
+    await glideAndClick(page.getByText("Clear all", { exact: true }));
+    await pause(800);
+    await typeInto(searchBox, "Paul Revere Williams", 50);
+    await page.keyboard.press("Enter");
+    const williamsRelated = resultCard(page, "Paul Revere Williams").getByRole("button", { name: "Related" });
+    await williamsRelated.waitFor({ timeout: 30_000 });
+    await pause(800);
+    await glideAndClick(williamsRelated);
+    await page.getByText("35 resources in the graph").waitFor({ timeout: 30_000 });
+    await pause(1500);
     await director.caption(
         "Follow the architect: 16 works here, 7 of them LA landmarks. The City's own layer has no architect field",
     );
-    await pause(5500);
+    await glideTo(page.locator(".relationship-summary-row").filter({ hasText: "designed" }).filter({ hasText: "16" }));
+    await pause(4500);
+    await director.caption("And the path between them: Rancho Vega, designed by Paul R. Williams");
+    await glideAndClick(page.getByRole("button", { name: "Show the path in the graph" }));
+    await pause(4000);
     await director.caption("This network is what makes Rancho Vega significant");
     await pause(3000);
+    await glideAndClick(page.locator(".relationship-graph").getByRole("button", { name: "Back" }));
+    await pause(800);
 }
 
-// Demo step A3b: arches-search's Include Related switch. His name as text
-// finds one monument, a house named for him that isn't linked to him; with
-// the switch on, the search follows relationships to his 16 works and, two
-// hops out, the Lockheed-Vega plant.
+// Demo step A3b: arches-search's Include Related switch, on the search A3
+// left. His name as text finds one monument, a house named for him that
+// isn't linked to him; with the switch on, the search follows relationships
+// to his 16 works and, two hops out, the Lockheed-Vega plant.
 export async function searchAcrossRelationships(studio, director) {
-    const { page, pause, glideTo, glideAndClick, typeInto } = studio;
-    await director.caption("");
-    await director.goto(`${ARCHES_URL}${SIMPLE_SEARCH_PATH}`, () =>
-        page.getByPlaceholder(/Search places, people/).waitFor(),
-    );
+    const { page, pause, glideTo, glideAndClick } = studio;
     await director.caption("Search for the architect by name...");
     await glideAndClick(
         page.locator(".type-btn").filter({ has: page.locator(".type-label", { hasText: /^Monument$/ }) }),
     );
-    await pause(800);
-    await typeInto(page.getByPlaceholder(/Search places, people/), "Paul Revere Williams", 50);
-    await page.keyboard.press("Enter");
     await page.getByText(/^1 results?$/).waitFor({ timeout: 30_000 });
     await pause(800);
     await director.caption("...and text finds one monument: a house with his name on it");
