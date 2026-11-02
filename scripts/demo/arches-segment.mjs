@@ -1,6 +1,7 @@
 // The Arches parts of the demo recording: screen a corridor in arches-search,
 // open Rancho Vega, follow its relationships to Paul R. Williams (the core
-// graph, on the demo's standalone related-resources page), ask the "not
+// graph, on the demo's standalone related-resources page), search across those
+// relationships with arches-search's Include Related switch, ask the "not
 // landmarks" question in arches-search, and (at the end) review the GeoLibre
 // edit as a reviewer.
 
@@ -202,6 +203,39 @@ export async function followRelationships(studio, director) {
     await pause(5500);
     await director.caption("This network is what makes Rancho Vega significant");
     await pause(3000);
+}
+
+// Demo step A3b: arches-search's Include Related switch. His name as text
+// finds one monument, a house named for him that isn't linked to him; with
+// the switch on, the search follows relationships to his 16 works and, two
+// hops out, the Lockheed-Vega plant.
+export async function searchAcrossRelationships(studio, director) {
+    const { page, pause, glideTo, glideAndClick, typeInto } = studio;
+    await director.caption("");
+    await director.goto(`${ARCHES_URL}${SIMPLE_SEARCH_PATH}`, () =>
+        page.getByPlaceholder(/Search places, people/).waitFor(),
+    );
+    await director.caption("Search for the architect by name...");
+    await glideAndClick(
+        page.locator(".type-btn").filter({ has: page.locator(".type-label", { hasText: /^Monument$/ }) }),
+    );
+    await pause(800);
+    await typeInto(page.getByPlaceholder(/Search places, people/), "Paul Revere Williams", 50);
+    await page.keyboard.press("Enter");
+    await page.getByText(/^1 results?$/).waitFor({ timeout: 30_000 });
+    await pause(800);
+    await director.caption("...and text finds one monument: a house with his name on it");
+    await glideTo(page.getByRole("link", { name: "Paul Revere Williams House", exact: true }));
+    await pause(3000);
+    await director.caption("Include Related follows the relationships instead");
+    await glideAndClick(page.locator(".include-related > :first-child"));
+    await page.getByText(/^18 results$/).waitFor({ timeout: 30_000 });
+    await pause(1000);
+    await director.caption("18: his 16 works, and two hops out, the Lockheed-Vega plant");
+    await glideTo(page.getByText(/^18 results$/));
+    await pause(2500);
+    await glideTo(page.getByRole("link", { name: "Rancho Vega", exact: true }));
+    await pause(2500);
 }
 
 /** Signs in without showing the login page; the director cuts the wait. */
